@@ -17,6 +17,18 @@
                     >
                         <span class="navbar-toggler-icon"></span>
                     </button>
+                    <router-link to="/client/taskList" class="navbar-brand">Task list</router-link>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                         <Identity />
                     </div>

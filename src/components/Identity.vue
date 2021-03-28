@@ -1,5 +1,8 @@
 <template>
     <ul class="navbar-nav">
+        <li v-if="isAuthenticated === true" class="nav-item">
+            <router-link to="/userManager/index" class="nav-link text-dark">User manager</router-link>
+        </li>
         <template v-if="isAuthenticated">
             <li class="nav-item">
                 <span class="nav-link text-dark">Hello {{userEmail}}!</span>
@@ -26,6 +29,10 @@ import JwtDecode from 'jwt-decode';
 export default class Identity extends Vue {
     get isAuthenticated(): boolean {
         return store.getters.isAuthenticated;
+    }
+
+    get isAdmin(): boolean {
+        return store.getters.isAdmin;
     }
 
     get userEmail(): string {
