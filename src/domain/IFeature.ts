@@ -13,4 +13,10 @@ export interface IFeature {
     timeCreated: Date;
     lastEdited: Date;
     changeLog: string;
+
+    categoryName: string;
+    featureStatusName: string;
+    assignee: string;
+    commentIds: string [];
+    votingIds: string [];
 }

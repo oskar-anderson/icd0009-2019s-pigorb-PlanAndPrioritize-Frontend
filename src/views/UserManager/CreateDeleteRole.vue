@@ -1,30 +1,29 @@
 <template>
-    <div>
-    <h4>Create new role</h4>
+    <div class="main">
+    <h5>Create new role</h5>
     <hr />
-    <h5 v-if="actionFailed === true" class="text-danger">{{errorMessage}}</h5>
-    <h5 v-if="successMessage !== ''" class="text-success">{{successMessage}}</h5>
+    <h6 v-if="actionFailed === true" class="text-danger">{{errorMessage}}</h6>
+    <h6 v-if="successMessage !== ''" class="text-success">{{successMessage}}</h6>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form>
                 <div class="form-group">
                     <label class="control-label" for="roleName">Role name</label>
                     <input class="form-control" name="roleName" type="text" minlength="1" maxlength="64" v-model="roleCreate.roleName"/>
                 </div>
                 <div class="form-group">
-                    <button type="submit" @click="createRoleOnClick()" class="btn btn-primary">Create role</button>
+                    <button type="submit" @click="createRoleOnClick()" class="btn btn-outline-success my-2 my-sm-0">Create role</button>
                 </div>
             </form>
         </div>
     </div>
     <hr />
 
-    <h4>Delete role</h4>
+    <h5>Delete role</h5>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form>
-
                 <div class="form-group">
                     <label class="control-label">Role name</label>
                     <select class="form-control" v-model="role.roleName">
@@ -33,16 +32,11 @@
                         </option>
                     </select>
                 </div>
-
                 <div class="form-group">
-                    <button type="submit" @click="deleteRoleOnClick()" class="btn btn-primary">Delete role</button>
+                    <button type="submit" @click="deleteRoleOnClick()" class="btn btn-outline-success my-2 my-sm-0">Delete role</button>
                 </div>
             </form>
         </div>
-    </div>
-
-    <div>
-        <router-link :to="{name: 'UserManagerIndex'}">Back</router-link>
     </div>
     </div>
 </template>

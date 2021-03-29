@@ -1,11 +1,11 @@
 <template>
-    <div>
-    <h4>Add role to user</h4>
+    <div class="main">
+    <h5>Add role to user</h5>
     <br>
-    <h5 v-if="roleAddingFailed === true" class="text-danger">{{errorMessage}}</h5>
-    <h5 v-if="roleAddingSucceeded === true" class="text-success">{{successMessage}}</h5>
+    <h6 v-if="roleAddingFailed === true" class="text-danger">{{errorMessage}}</h6>
+    <h6 v-if="roleAddingSucceeded === true" class="text-success">{{successMessage}}</h6>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form>
 
                 <div class="form-group">
@@ -27,19 +27,19 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" @click="addRoleToUser()" class="btn btn-primary">Add role to user</button>
+                    <button type="submit" @click="addRoleToUser()" class="btn btn-outline-success my-2 my-sm-0">Add</button>
                 </div>
             </form>
         </div>
     </div>
     <hr />
 
-    <h4>Remove role from user</h4>
+    <h5>Remove role from user</h5>
     <br>
-    <h5 v-if="roleRemovingFailed === true" class="text-danger">{{errorMessage}}</h5>
-    <h5 v-if="roleRemovingSucceeded === true" class="text-success">{{successMessage}}</h5>
+    <h6 v-if="roleRemovingFailed === true" class="text-danger">{{errorMessage}}</h6>
+    <h6 v-if="roleRemovingSucceeded === true" class="text-success">{{successMessage}}</h6>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form submit.trigger="onRemoveRole($event)">
 
                 <div class="form-group">
@@ -61,19 +61,19 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" @click="removeRoleFromUser()" class="btn btn-primary">Remove role from user</button>
+                    <button type="submit" @click="removeRoleFromUser()" class="btn btn-outline-success my-2 my-sm-0">Remove</button>
                 </div>
             </form>
         </div>
     </div>
     <hr />
 
-    <h4>Delete user</h4>
+    <h5>Delete user</h5>
     <br>
-    <h5 v-if="userDeletingFailed === true" class="text-danger">{{errorMessage}}</h5>
-    <h5 v-if="userDeletingSucceeded === true" class="text-success">{{successMessage}}</h5>
+    <h6 v-if="userDeletingFailed === true" class="text-danger">{{errorMessage}}</h6>
+    <h6 v-if="userDeletingSucceeded === true" class="text-success">{{successMessage}}</h6>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form>
                 <div class="form-group">
                     <label class="control-label">User</label>
@@ -84,21 +84,21 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button type="submit" @click="deleteUser()" class="btn btn-primary">Delete user</button>
+                    <button type="submit" @click="deleteUser()" class="btn btn-outline-success my-2 my-sm-0">Delete</button>
                 </div>
             </form>
         </div>
     </div>
     <hr />
 
-    <h4>Create new user</h4>
+    <h5>Create new user</h5>
     <br>
-    <h5 v-if="userCreatingSucceeded === true" class="text-success">{{successMessage}}</h5>
-    <h5 v-if="incorrectEmail === true" class="text-danger">Inncorrect email</h5>
-    <h5 v-if="passWordsDontMatch === true" class="text-danger">Passwords don't match!</h5>
-    <h5 v-if="userCreatingFailed === true" class="text-danger">{{errorMessage}}</h5>
+    <h6 v-if="userCreatingSucceeded === true" class="text-success">{{successMessage}}</h6>
+    <h6 v-if="incorrectEmail === true" class="text-danger">Inncorrect email</h6>
+    <h6 v-if="passWordsDontMatch === true" class="text-danger">Passwords don't match!</h6>
+    <h6 v-if="userCreatingFailed === true" class="text-danger">{{errorMessage}}</h6>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form>
             <div class="form-group">
                 <label for="Input_Email">Email</label>
@@ -140,15 +140,10 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" @click="createUserWithRole()" class="btn btn-primary">Create user</button>
+                    <button type="submit" @click="createUserWithRole()" class="btn btn-outline-success my-2 my-sm-0">Create</button>
                 </div>
             </form>
         </div>
-    </div>
-    <br>
-
-    <div>
-        <router-link :to="{name: 'UserManagerIndex'}">Back</router-link>
     </div>
     </div>
 </template>

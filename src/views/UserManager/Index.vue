@@ -1,6 +1,7 @@
 <template>
-    <div>
-    <h4>Current Users</h4>
+    <div class="main">
+    <h5>Registered users</h5>
+    <br>
 <table class="table">
     <thead>
     <tr>
@@ -27,10 +28,10 @@
 
 <div>
     <router-link :to="{name: 'CreateDeleteRole'}">
-        <button type="submit" class="btn btn-primary">Manage roles</button>
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Manage roles</button>
     </router-link> &nbsp;
     <router-link :to="{name: 'CreateDeleteUser'}">
-        <button type="submit" class="btn btn-primary">Manage users</button>
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Manage users</button>
     </router-link>
 </div>
     </div>

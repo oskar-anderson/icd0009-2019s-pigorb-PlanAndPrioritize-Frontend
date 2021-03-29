@@ -1,7 +1,8 @@
 <template>
+    <div class="main">
     <div class="row">
-        <div class="col-md-6">
-            <h4>Use a local account to log in.</h4>
+        <div class="col-md-3">
+            <h4>Log in</h4>
             <h5 v-if="loginWasOk === false" class="text-danger">Bad login attempt!</h5>
             <hr />
             <div class="form-group">
@@ -18,9 +19,10 @@
                 />
             </div>
             <div class="form-group">
-                <button @click="loginOnClick($event)" class="btn btn-primary">Log in</button>
+                <button @click="loginOnClick($event)" class="btn btn-outline-success my-2 my-sm-0">Log in</button>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -59,7 +61,6 @@ export default class LoginIndex extends Vue {
                         location.reload();
                     } else {
                         this.loginWasOk = false;
-                        router.push("account/login");
                     }
                 });
         }

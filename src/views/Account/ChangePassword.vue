@@ -70,8 +70,7 @@ export default class ChangePassword extends Vue {
             this.passWordsDontMatch = true;
         } else {
             if (await store.dispatch("changePassword", this.passwordInfo)) {
-                await store.dispatch("clearJwt");
-                router.push("/account/login");
+                router.push("/client/taskList");
             } else {
                 this.cantCange = true;
             }
