@@ -71,7 +71,7 @@ export default class TaskCreate extends Vue {
         if (this.featureCreate.title === "") {
             this.errorMessage = "Title field must be filled";
         } else {
-            await store.dispatch("featureCategory", this.featureCreate);
+            await store.dispatch("featureCreate", this.featureCreate);
             router.push("/")
         }
     }

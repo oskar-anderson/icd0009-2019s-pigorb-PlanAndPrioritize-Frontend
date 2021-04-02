@@ -27,7 +27,11 @@
             </thead>
             <tbody>
                 <tr v-for="feature in features" :key="feature.id">
-                    <td>{{feature.title}}</td>
+                    <td>
+                         <router-link :to="{name: 'TaskDetails', params: { id: feature.id }}">
+                            {{feature.title}}
+                        </router-link>
+                    </td>
                     <td>{{feature.categoryName}}</td>
                     <td>{{feature.size}}</td>
                     <td>{{feature.assignee}}</td>

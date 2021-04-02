@@ -1,4 +1,4 @@
-export interface IFeature {
+export interface IFeatureEdit {
     id: string;
     title: string;
     size: number;
@@ -6,16 +6,11 @@ export interface IFeature {
     description: string;
     startTime: Date;
     endTime: Date;
-    duration: number;
     categoryId: string;
+    featureStatus: string;
     userId: string;
     timeCreated: Date;
-    lastEdited: Date;
     changeLog: string;
 
-    categoryName: string;
-    featureStatus: string;
-    assignee: string;
-    commentIds: string [];
-    votingIds: string [];
+    userEditedEmail: string;
 }

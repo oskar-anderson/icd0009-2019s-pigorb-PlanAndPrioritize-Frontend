@@ -9,6 +9,9 @@ import ChangePassword from '../views/Account/ChangePassword.vue'
 
 import TaskList from '../views/Client/TaskList.vue'
 import TaskCreate from '../views/Client/TaskCreate.vue'
+import TaskEdit from '../views/Client/TaskEdit.vue'
+import TaskDetails from '../views/Client/TaskDetails.vue'
+
 import Roadmap from '../views/Client/Roadmap.vue'
 import AssignedVotings from '../views/Client/AssignedVotings.vue'
 import Categories from '../views/Client/Categories.vue'
@@ -20,14 +23,18 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
     { path: '/', name: 'TaskList', component: TaskList },
     { path: '/create-task', name: 'TaskCreate', component: TaskCreate },
+    { path: '/edit-task/:id?', name: 'TaskEdit', component: TaskEdit, props: true },
+    { path: '/task/:id?', name: 'TaskDetails', component: TaskDetails, props: true },
+
     { path: '/roadmap', name: 'Roadmap', component: Roadmap },
+
     { path: '/assigned', name: 'AssignedVotings', component: AssignedVotings },
+
     { path: '/categories', name: 'Categories', component: Categories },
     { path: '/create-category', name: 'CategoryCreate', component: CategoryCreate },
     { path: '/edit-category/:id?', name: 'CategoryEdit', component: CategoryEdit, props: true },
 
     { path: '/login', name: 'AccountLogin', component: AccountLogin },
-
     { path: '/usermanager', name: 'UserManagerIndex', component: UserManagerIndex },
     { path: '/user', name: 'CreateDeleteUser', component: CreateDeleteUser },
     { path: '/role', name: 'CreateDeleteRole', component: CreateDeleteRole },

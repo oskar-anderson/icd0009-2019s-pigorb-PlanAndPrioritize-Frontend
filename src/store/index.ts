@@ -18,6 +18,10 @@ import { ICategory } from '@/domain/ICategory';
 import { CategoryApi } from '@/services/CategoryApi';
 import { ICategoryCreate } from '@/domain/ICategoryCreate';
 import { ICategoryEdit } from '@/domain/ICategoryEdit';
+import { IFeatureEdit } from '@/domain/IFeatureEdit';
+import { IComment } from '@/domain/IComment';
+import { ICommentCreate } from '@/domain/ICommentCreate';
+import { CommentApi } from '@/services/CommentApi';
 
 Vue.use(Vuex)
 
@@ -32,7 +36,9 @@ export default new Vuex.Store({
         features: [] as IFeature[],
 
         category: null as ICategoryEdit | null,
-        categories: [] as ICategory[]
+        categories: [] as ICategory[],
+
+        comments: [] as IComment[]
     },
 
     mutations: {
@@ -67,6 +73,9 @@ export default new Vuex.Store({
         },
         setCategory(state, category: ICategoryEdit) {
             state.category = category;
+        },
+        setComments(state, comments: IComment[]) {
+            state.comments = comments;
         }
     },
 
@@ -200,9 +209,9 @@ export default new Vuex.Store({
                 context.commit('setFeatures', features);
             }
         },
-        async editFeature(context, feature: IFeature): Promise<boolean> {
+        async editFeature(context, feature: IFeatureEdit): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await FeatureApi.editFeature(feature, context.getters.jwt);
+                const result = await FeatureApi.editFeature(feature.id, feature, context.getters.jwt);
                 return result;
             }
             return false;
@@ -233,6 +242,18 @@ export default new Vuex.Store({
         async editCategory(context, category: ICategoryEdit): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await CategoryApi.editCategory(category.id, category, context.getters.jwt);
+                return result;
+            }
+            return false;
+        },
+
+        async getComments(context, id: string): Promise<void> {
+            const comments = await CommentApi.getCommentsForFeature(id, context.getters.jwt);
+            context.commit('setComments', comments);
+        },
+        async createComment(context, comment: ICommentCreate): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                const result = await CommentApi.createComment(comment, context.getters.jwt);
                 return result;
             }
             return false;

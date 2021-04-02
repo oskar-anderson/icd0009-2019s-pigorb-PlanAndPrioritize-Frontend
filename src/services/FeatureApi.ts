@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { IFeature } from '@/domain/IFEature';
 import { IFeatureCreate } from '@/domain/IFeatureCreate';
+import { IFeatureEdit } from '@/domain/IFeatureEdit';
 
 interface IResponse {
     status: string;
@@ -19,7 +20,7 @@ export abstract class FeatureApi {
     )
 
     static async getAllFeatures(jwt: string): Promise<IFeature[]> {
-        const url = 'GetFeatures';
+        const url = 'GetFeaturesForList';
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
@@ -89,13 +90,13 @@ export abstract class FeatureApi {
         }
     }
 
-    static async editFeature(feature: IFeature, jwt: string): Promise<boolean> {
-        const url = 'EditFeature';
+    static async editFeature(id: string, feature: IFeatureEdit, jwt: string): Promise<boolean> {
+        const url = 'EditFeature/' + id;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
         try {
-            const response = await this.axios.put<IFeature>(url, feature, auth);
+            const response = await this.axios.put<IFeatureEdit>(url, feature, auth);
             console.log('EditFeature response', response);
             if (response.status === 200) {
                 return true;
