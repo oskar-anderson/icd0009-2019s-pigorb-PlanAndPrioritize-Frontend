@@ -95,7 +95,6 @@ export default class CreateDeleteRole extends Vue {
     }
 
     mounted(): void {
-        console.log("mounted");
         store.dispatch("getRoles");
     }
 }

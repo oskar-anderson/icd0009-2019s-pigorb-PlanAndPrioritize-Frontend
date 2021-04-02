@@ -7,10 +7,13 @@
             <h5>Please log in or contact your administrator to create a new account</h5>
         </div>
         <div v-else class="main">
-        <h5>Task List</h5>
-
-        <small class="text-muted">Smaller task list text</small>
-
+        <div>
+            <h5>Task list
+            <router-link :to="{name: 'TaskCreate'}">
+              <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="float: right;">Add task</button>
+              </router-link></h5>
+        </div>
+        <br>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -29,7 +32,7 @@
                     <td>{{feature.size}}</td>
                     <td>{{feature.assignee}}</td>
                     <td>{{feature.priorityValue}}</td>
-                    <td>{{feature.startTime}} - {{feature.endTime}}</td>
+                    <td>{{moment(feature.startTime).format('DD.MM.YYYY')}} - {{moment(feature.endTime).format('DD.MM.YYYY')}}</td>
                     <td>
                         <div>
                             <span>

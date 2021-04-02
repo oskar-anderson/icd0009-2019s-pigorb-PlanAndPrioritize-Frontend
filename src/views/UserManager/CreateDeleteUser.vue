@@ -282,7 +282,6 @@ export default class CreateDeleteUser extends Vue {
     }
 
     mounted(): void {
-        console.log("mounted");
         store.dispatch("getRoles");
         store.dispatch("getUsers");
     }

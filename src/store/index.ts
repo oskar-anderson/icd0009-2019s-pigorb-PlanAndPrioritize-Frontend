@@ -14,6 +14,10 @@ import { FeatureApi } from '@/services/FeatureApi';
 import { IFeature } from '@/domain/IFeature';
 import { IFeatureCreate } from '@/domain/IFeatureCreate';
 import { IPasswordDTO } from '@/types/IPasswordDTO';
+import { ICategory } from '@/domain/ICategory';
+import { CategoryApi } from '@/services/CategoryApi';
+import { ICategoryCreate } from '@/domain/ICategoryCreate';
+import { ICategoryEdit } from '@/domain/ICategoryEdit';
 
 Vue.use(Vuex)
 
@@ -25,7 +29,10 @@ export default new Vuex.Store({
         requirePasswordChange: true,
 
         feature: null as IFeature | null,
-        features: [] as IFeature[]
+        features: [] as IFeature[],
+
+        category: null as ICategoryEdit | null,
+        categories: [] as ICategory[]
     },
 
     mutations: {
@@ -54,6 +61,12 @@ export default new Vuex.Store({
         },
         setFeature(state, feature: IFeature) {
             state.feature = feature;
+        },
+        setCategories(state, categories: ICategory[]) {
+            state.categories = categories;
+        },
+        setCategory(state, category: ICategoryEdit) {
+            state.category = category;
         }
     },
 
@@ -118,7 +131,6 @@ export default new Vuex.Store({
             context.commit('setRoles', roles);
         },
         async createRole(context, role: IRole): Promise<boolean> {
-            console.log('createRole', context.getters.isAuthenticated);
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await AccountApi.createRole(role, context.getters.jwt);
                 await context.dispatch('getRoles');
@@ -127,7 +139,6 @@ export default new Vuex.Store({
             return false;
         },
         async deleteRole(context, role: IRole): Promise<boolean> {
-            console.log('deleteRole', context.getters.isAuthenticated);
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await AccountApi.deleteRole(role, context.getters.jwt);
                 await context.dispatch('getRoles');
@@ -144,7 +155,6 @@ export default new Vuex.Store({
             return false;
         },
         async removeRoleFromUser(context, role: IUserRole): Promise<boolean> {
-            console.log('removeRoleFromUser', context.getters.isAuthenticated);
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await AccountApi.removeRoleFromUser(role, context.getters.jwt);
                 return result;
@@ -152,7 +162,6 @@ export default new Vuex.Store({
             return false;
         },
         async deleteUser(context, user: IUserDelete): Promise<boolean> {
-            console.log('deleteUser', context.getters.isAuthenticated);
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await AccountApi.deleteUser(user, context.getters.jwt);
                 await context.dispatch('getUsers');
@@ -161,7 +170,6 @@ export default new Vuex.Store({
             return false;
         },
         async createUserWithRole(context, user: IUserCreate): Promise<boolean> {
-            console.log('createUserWithRole', context.getters.isAuthenticated);
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await AccountApi.createUserWithRole(user, context.getters.jwt);
                 await context.dispatch('getUsers');
@@ -195,6 +203,36 @@ export default new Vuex.Store({
         async editFeature(context, feature: IFeature): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await FeatureApi.editFeature(feature, context.getters.jwt);
+                return result;
+            }
+            return false;
+        },
+
+        async getCategories(context): Promise<void> {
+            const categories = await CategoryApi.getAllCategories(context.getters.jwt);
+            context.commit('setCategories', categories);
+        },
+        async getCategory(context, id: string): Promise<void> {
+            const category = await CategoryApi.getCategory(context.getters.jwt, id);
+            context.commit('setCategory', category);
+        },
+        async createCategory(context, category: ICategoryCreate): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                const result = await CategoryApi.createCategory(category, context.getters.jwt);
+                return result;
+            }
+            return false;
+        },
+        async deleteCategory(context, categoryId: string): Promise<void> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                await CategoryApi.deleteCategory(categoryId, context.getters.jwt);
+                const categories = await CategoryApi.getAllCategories(context.getters.jwt);
+                context.commit('setCategories', categories);
+            }
+        },
+        async editCategory(context, category: ICategoryEdit): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                const result = await CategoryApi.editCategory(category.id, category, context.getters.jwt);
                 return result;
             }
             return false;

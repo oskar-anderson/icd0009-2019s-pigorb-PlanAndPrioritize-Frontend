@@ -55,7 +55,7 @@ export default class LoginIndex extends Vue {
                         const requirePasswordChange = store.state.requirePasswordChange;
                         let route = "/";
                         if (requirePasswordChange) {
-                            route = "/account/changePassword";
+                            route = "/changePassword";
                         }
                         router.push(route);
                         location.reload();

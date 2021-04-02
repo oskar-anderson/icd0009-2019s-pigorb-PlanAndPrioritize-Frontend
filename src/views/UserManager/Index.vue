@@ -49,7 +49,6 @@ export default class UserManagerIndex extends Vue {
     }
 
     mounted(): void {
-        console.log("mounted");
         store.dispatch("getUsers");
     }
 }

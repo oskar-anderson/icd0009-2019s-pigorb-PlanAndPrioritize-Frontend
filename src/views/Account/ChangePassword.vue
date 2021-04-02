@@ -1,9 +1,11 @@
 <template>
+    <div v-if="isAuthenticated===true" class=main>
+        <h5>Password change is required after first login</h5>
     <div class="row">
-        <div class="col-md-5">
-            <h5 v-if="passWordsDontMatch === true" class="text-danger">Passwords don't match!</h5>
+        <div class="col-md-3">
+            <h6 v-if="passWordsDontMatch === true" class="text-danger">Passwords don't match!</h6>
             <h6 v-if="cantCange === true" class="text-danger">Error occurred while trying to change password. Password must be 6-100 characters long, contain upper and lower case letters, numbers and special characters!</h6>
-            <h5>Password change is required after first login</h5>
+
             <hr />
             <div class="form-group">
                 <label for="Input_Email">Email</label>
@@ -37,9 +39,10 @@
                 />
             </div>
             <div class="form-group">
-                <button @click="changeOnClick($event)" class="btn btn-primary">Change password</button>
+                <button @click="changeOnClick($event)" class="btn btn-outline-success my-2 my-sm-0">Change password</button>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -52,6 +55,10 @@ import router from "../../router";
 
 @Component
 export default class ChangePassword extends Vue {
+    get isAuthenticated(): boolean {
+        return store.getters.isAuthenticated;
+    }
+
     private passwordInfo: IPasswordDTO = {
         email: '',
         oldPassword: '',
@@ -70,7 +77,7 @@ export default class ChangePassword extends Vue {
             this.passWordsDontMatch = true;
         } else {
             if (await store.dispatch("changePassword", this.passwordInfo)) {
-                router.push("/client/taskList");
+                router.push("/");
             } else {
                 this.cantCange = true;
             }

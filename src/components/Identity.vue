@@ -9,7 +9,7 @@
             </li>
         </template>
         <li v-else class="nav-item">
-            <router-link to="/account/login" class="nav-link text-dark">Login</router-link>
+            <router-link to="/login" class="nav-link text-dark">Login</router-link>
         </li>
     </ul>
 </template>

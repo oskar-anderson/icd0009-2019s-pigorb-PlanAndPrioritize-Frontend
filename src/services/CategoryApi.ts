@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { ICategory } from '@/domain/ICategory';
 import { ICategoryCreate } from '@/domain/ICategoryCreate';
+import { ICategoryEdit } from '@/domain/ICategoryEdit';
 
 interface IResponse {
     status: string;
@@ -36,13 +37,13 @@ export abstract class CategoryApi {
         }
     }
 
-    static async getCategory(jwt: string, id: string): Promise<ICategory | null> {
+    static async getCategory(jwt: string, id: string): Promise<ICategoryEdit | null> {
         const url = 'GetCategory/' + id;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
         try {
-            const response = await this.axios.get<ICategory>(url, auth);
+            const response = await this.axios.get<ICategoryEdit>(url, auth);
             console.log('getCategory response', response);
             if (response.status === 200) {
                 return response.data;
@@ -89,13 +90,13 @@ export abstract class CategoryApi {
         }
     }
 
-    static async editCategory(Category: ICategory, jwt: string): Promise<boolean> {
-        const url = 'EditCategory';
+    static async editCategory(id: string, Category: ICategoryEdit, jwt: string): Promise<boolean> {
+        const url = 'EditCategory/' + id;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
         try {
-            const response = await this.axios.put<ICategory>(url, Category, auth);
+            const response = await this.axios.put<ICategoryEdit>(url, Category, auth);
             console.log('EditCategory response', response);
             if (response.status === 200) {
                 return true;
