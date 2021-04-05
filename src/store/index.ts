@@ -23,6 +23,9 @@ import { IComment } from '@/domain/IComment';
 import { ICommentCreate } from '@/domain/ICommentCreate';
 import { CommentApi } from '@/services/CommentApi';
 import { IFeatureState } from '@/domain/IFeatureState';
+import { IVoting } from '@/domain/IVoting';
+import { VotingApi } from '@/services/VotingApi';
+import { IVotingCreate } from '@/domain/IVotingCreate';
 
 Vue.use(Vuex)
 
@@ -42,7 +45,10 @@ export default new Vuex.Store({
         categories: [] as ICategory[],
         categoriesPlain: [] as ICategoryEdit[],
 
-        comments: [] as IComment[]
+        comments: [] as IComment[],
+
+        voting: null as IVoting | null,
+        votings: [] as IVoting[]
     },
 
     mutations: {
@@ -88,8 +94,16 @@ export default new Vuex.Store({
         setCategory(state, category: ICategoryEdit) {
             state.category = category;
         },
+
         setComments(state, comments: IComment[]) {
             state.comments = comments;
+        },
+
+        setVotings(state, votings: IVoting[]) {
+            state.votings = votings;
+        },
+        setVoting(state, voting: IVoting) {
+            state.voting = voting;
         }
     },
 
@@ -172,15 +186,13 @@ export default new Vuex.Store({
         async addRoleToUser(context, role: IUserRole): Promise<boolean> {
             console.log('addRoleToUser', context.getters.isAuthenticated);
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await AccountApi.addRoleToUser(role, context.getters.jwt);
-                return result;
+                return await AccountApi.addRoleToUser(role, context.getters.jwt);
             }
             return false;
         },
         async removeRoleFromUser(context, role: IUserRole): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await AccountApi.removeRoleFromUser(role, context.getters.jwt);
-                return result;
+                return await AccountApi.removeRoleFromUser(role, context.getters.jwt);
             }
             return false;
         },
@@ -229,8 +241,7 @@ export default new Vuex.Store({
         },
         async editFeature(context, feature: IFeatureEdit): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await FeatureApi.editFeature(feature.id, feature, context.getters.jwt);
-                return result;
+                return await FeatureApi.editFeature(feature.id, feature, context.getters.jwt);
             }
             return false;
         },
@@ -253,8 +264,7 @@ export default new Vuex.Store({
         },
         async createCategory(context, category: ICategoryCreate): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await CategoryApi.createCategory(category, context.getters.jwt);
-                return result;
+                return await CategoryApi.createCategory(category, context.getters.jwt);
             }
             return false;
         },
@@ -267,8 +277,7 @@ export default new Vuex.Store({
         },
         async editCategory(context, category: ICategoryEdit): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await CategoryApi.editCategory(category.id, category, context.getters.jwt);
-                return result;
+                return await CategoryApi.editCategory(category.id, category, context.getters.jwt);
             }
             return false;
         },
@@ -279,7 +288,35 @@ export default new Vuex.Store({
         },
         async createComment(context, comment: ICommentCreate): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await CommentApi.createComment(comment, context.getters.jwt);
+                return await CommentApi.createComment(comment, context.getters.jwt);
+            }
+            return false;
+        },
+
+        async getVotings(context): Promise<void> {
+            const votings = await VotingApi.getAllVotings(context.getters.jwt);
+            context.commit('setVotings', votings);
+        },
+        async getVoting(context, id: string): Promise<void> {
+            const voting = await VotingApi.getVoting(context.getters.jwt, id);
+            context.commit('setVoting', voting);
+        },
+        async createVoting(context, voting: IVotingCreate): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                return await VotingApi.createVoting(voting, context.getters.jwt);
+            }
+            return false;
+        },
+        async deleteVoting(context, votingId: string): Promise<void> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                await VotingApi.deleteVoting(votingId, context.getters.jwt);
+                const votings = await VotingApi.getAllVotings(context.getters.jwt);
+                context.commit('setVotings', votings);
+            }
+        },
+        async editVoting(context, voting: IVoting): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                const result = await VotingApi.editVoting(voting.id, voting, context.getters.jwt);
                 return result;
             }
             return false;

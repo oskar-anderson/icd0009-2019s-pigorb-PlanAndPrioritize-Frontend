@@ -17,6 +17,4 @@ export interface IFeature {
     categoryName: string;
     featureStatus: string;
     assignee: string;
-    commentIds: string [];
-    votingIds: string [];
 }

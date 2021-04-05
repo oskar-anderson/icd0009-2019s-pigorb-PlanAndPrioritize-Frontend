@@ -43,10 +43,12 @@
                     </div>
                     <div class="form-group">
                     <label class="control-label">Start time</label>
+                    <img src="../../assets/icons/clear_icon.png" height="15" style="float: right;" alt="clear-icon" @click="Clear('start')">
                     <input type="date" v-model="featureCreate.startTime" class="form-control" />
                     </div>
                     <div class="form-group">
                     <label class="control-label">End time</label>
+                    <img src="../../assets/icons/clear_icon.png" height="15" style="float: right;" alt="clear-icon" @click="Clear('end')">
                     <input type="date" v-model="featureCreate.endTime" class="form-control" />
                     </div>
                     <div>
@@ -107,6 +109,15 @@ export default class TaskCreate extends Vue {
         } else {
             const feature = await store.dispatch("createFeature", this.featureCreate);
             router.push("/task/" + feature.id)
+        }
+    }
+
+    Clear(date: string): void {
+        if (date === "start") {
+            this.featureCreate.startTime = null;
+        }
+        if (date === "end") {
+            this.featureCreate.endTime = null;
         }
     }
 

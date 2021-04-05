@@ -51,12 +51,12 @@
                     </div>
                     <div class="form-group">
                     <label class="control-label">Start time</label>
-                    <img src="../../assets/icons/clear_icon.png" height="17" style="float: right;" alt="clear-icon" @click="Clear('start')">
+                    <img src="../../assets/icons/clear_icon.png" height="15" style="float: right;" alt="clear-icon" @click="Clear('start')">
                     <input class="col-sm-6, form-control" type="datetime-local" v-model="feature.startTime"/>
                     </div>
                     <div class="form-group">
                     <label class="control-label">End time</label>
-                    <img src="../../assets/icons/clear_icon.png" height="17" style="float: right;" alt="clear-icon" @click="Clear('end')">
+                    <img src="../../assets/icons/clear_icon.png" height="15" style="float: right;" alt="clear-icon" @click="Clear('end')">
                     <input type="datetime-local" v-model="feature.endTime" class="form-control" />
                     </div>
                     <div>

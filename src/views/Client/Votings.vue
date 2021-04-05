@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="isAuthenticated === false" class="about-section">
+        <div v-if="isAdmin === false" class="about-section">
             <br>
             <h2>Plan and prioritize your work</h2>
             <br />
@@ -19,11 +19,17 @@
             <thead>
                 <tr>
                     <th>Voting</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Open for voting</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="voting in votings" :key="voting.id">
                     <td>{{voting.title}}</td>
+                    <td style="max-width: 50em;">{{voting.description}}</td>
+                    <td>{{voting.votingStatus}}</td>
+                    <td>{{formatDates(voting.startTime, voting.endTime)}}</td>
                     <td>
                         <div>
                             <span>
@@ -47,6 +53,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import store from "./../../store";
+import { IVoting } from "@/domain/IVoting";
+import moment from "moment";
 
 @Component
 export default class Votings extends Vue {
@@ -58,7 +66,7 @@ export default class Votings extends Vue {
         return store.state.votings;
     }
 
-    ConfirmDelete(category: IVoting): void {
+    ConfirmDelete(voting: IVoting): void {
         if (confirm("Delete voting: '" + voting.title + "'?")) {
             this.Delete(voting.id);
         }
@@ -66,6 +74,10 @@ export default class Votings extends Vue {
 
     async Delete(votingId: string): Promise<void> {
         store.dispatch("deleteVoting", votingId);
+    }
+
+    formatDates(startTime: Date | null, endTime: Date | null): string {
+        return moment(startTime).format('DD.MM.YYYY HH:mm') + " - " + moment(endTime).format('DD.MM.YYYY HH:mm');
     }
 
     mounted(): void {

@@ -32,7 +32,7 @@
             </thead>
             <tbody>
                 <tr v-for="feature in features" :key="feature.id">
-                    <td>
+                    <td style="max-width: 30em;">
                          <router-link :to="{name: 'TaskDetails', params: { id: feature.id }}">
                             {{feature.title}}
                         </router-link>
@@ -103,7 +103,7 @@ export default class TaskList extends Vue {
         if (endTime === null) {
             return moment(startTime).format('DD.MM.YYYY') + " - . . . . . . . . . . ";
         }
-        return moment(startTime).format('DD.MM.YYYY') + " - " + moment(startTime).format('DD.MM.YYYY');
+        return moment(startTime).format('DD.MM.YYYY') + " - " + moment(endTime).format('DD.MM.YYYY');
     }
 
     checkValue(size: number): string | number {

@@ -22,6 +22,9 @@
             <router-link to="/categories" class="navbar-brand">Categories</router-link>
             <hr class="hr-grey" v-if="isAdmin === true">
             <span v-if="isAdmin === true">
+                <router-link to="/votings" class="navbar-brand">Priority votings</router-link>
+            </span>
+            <span v-if="isAdmin === true">
                 <router-link to="/usermanager" class="navbar-brand">Manage Users</router-link>
             </span>
         </div>
