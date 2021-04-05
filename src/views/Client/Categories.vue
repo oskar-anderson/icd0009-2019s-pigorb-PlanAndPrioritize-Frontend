@@ -21,17 +21,17 @@
                     <th>Category</th>
                     <th>Description</th>
                     <th>Number of tasks</th>
-                    <th>Tasks in progress</th>
-                    <th>Finished tasks</th>
+                    <th>In progress</th>
+                    <th>Closed</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="category in categories" :key="category.id">
                     <td>{{category.title}}</td>
                     <td>{{category.description}}</td>
-                    <td>{{category.count}}</td>
-                    <td>{{category.inProgress}}</td>
-                    <td>{{category.finished}}</td>
+                    <td style="text-align:center">{{category.count}}</td>
+                    <td style="text-align:center">{{category.inProgress}}</td>
+                    <td style="text-align:center">{{category.finished}}</td>
                     <td>
                         <div>
                             <span>

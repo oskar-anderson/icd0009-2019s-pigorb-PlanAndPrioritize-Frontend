@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { IFeature } from '@/domain/IFEature';
 import { IFeatureCreate } from '@/domain/IFeatureCreate';
 import { IFeatureEdit } from '@/domain/IFeatureEdit';
+import { IFeatureState } from '@/domain/IFeatureState';
 
 interface IResponse {
     status: string;
@@ -10,7 +11,7 @@ interface IResponse {
 export abstract class FeatureApi {
     private static axios = Axios.create(
         {
-            baseURL: "https://localhost:5001/api/v1/FeatureList/",
+            baseURL: "https://localhost:5001/api/v1/Features/",
             headers: {
                 common: {
                     'Content-Type': 'application/json'
@@ -55,7 +56,25 @@ export abstract class FeatureApi {
         }
     }
 
-    static async createFeature(feature: IFeatureCreate, jwt: string): Promise<boolean> {
+    static async getFeaturePlain(jwt: string, id: string): Promise<IFeatureEdit | null> {
+        const url = 'GetFeaturePlain/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeatureEdit>(url, auth);
+            console.log('getFeaturePlain response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return null;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return null;
+        }
+    }
+
+    static async createFeature(feature: IFeatureCreate, jwt: string): Promise<IFeature | null> {
         const url = 'CreateFeature';
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
@@ -63,13 +82,13 @@ export abstract class FeatureApi {
         try {
             const response = await this.axios.post<IFeature>(url, feature, auth);
             console.log('CreateFeature response', response);
-            if (response.status === 200) {
-                return true;
+            if (response.status === 201) {
+                return response.data;
             }
-            return false;
+            return null;
         } catch (error) {
             console.log('error: ', (error as Error).message);
-            return false;
+            return null;
         }
     }
 
@@ -105,6 +124,24 @@ export abstract class FeatureApi {
         } catch (error) {
             console.log('Error: ', (error as Error).message);
             return false;
+        }
+    }
+
+    static async getFeatureStates(jwt: string): Promise<IFeatureState[]> {
+        const url = 'GetFeatureStates';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeatureState[]>(url, auth);
+            console.log('getFeatureStates response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
         }
     }
 }

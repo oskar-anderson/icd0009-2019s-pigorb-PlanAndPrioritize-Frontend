@@ -4,5 +4,5 @@ export interface IFeatureCreate {
     startTime: Date | null;
     endTime: Date | null;
     categoryId: string;
-    userId: string;
+    appUserId: string | null;
 }

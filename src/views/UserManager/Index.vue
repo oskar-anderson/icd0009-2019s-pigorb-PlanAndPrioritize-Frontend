@@ -6,6 +6,9 @@
     <thead>
     <tr>
         <th>
+            Name
+        </th>
+        <th>
             Email
         </th>
         <th>
@@ -16,6 +19,9 @@
     </thead>
     <tbody>
         <tr v-for="user in users" :key="user.id">
+            <td>
+                {{user.firstLastName}}
+            </td>
             <td>
                 {{user.email}}
             </td>

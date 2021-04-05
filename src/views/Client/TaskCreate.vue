@@ -24,6 +24,31 @@
                         <label class="control-label">Description</label>
                         <textarea v-model="featureCreate.description" class="form-control" />
                     </div>
+                    <div class="form-group">
+                    <label class="control-label">Category</label>
+                    <select class="form-control" v-model="featureCreate.categoryId">
+                        <option v-for="category in categories" :key="category.id" v-bind:value="category.id">
+                            {{category.title}}
+                        </option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label">Assign to user</label>
+                    <select class="form-control" v-model="featureCreate.appUserId">
+                        <option></option>
+                        <option v-for="user in users" :key="user.id" v-bind:value="user.id">
+                            {{user.firstLastName}}
+                        </option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label">Start time</label>
+                    <input type="date" v-model="featureCreate.startTime" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label">End time</label>
+                    <input type="date" v-model="featureCreate.endTime" class="form-control" />
+                    </div>
                     <div>
                         <router-link :to="{name: 'TaskList'}">
                             <button
@@ -32,10 +57,7 @@
                                 style="margin-right:15px;"
                             >Cancel</button>
                         </router-link>
-                        <button
-                            type="submit"
-                            class="btn btn-outline-success my-2 my-sm-0"
-                            @click="Create()">Save</button>
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="padding-right:20px; padding-left:20px;" @click="Create()">Save</button>
                     </div>
                 </form>
             </div>
@@ -49,11 +71,21 @@ import { Component, Vue } from "vue-property-decorator";
 import store from "../../store";
 import router from '@/router';
 import { IFeatureCreate } from "@/domain/IFeatureCreate";
+import { ICategoryEdit } from "@/domain/ICategoryEdit";
+import { IUser } from "@/domain/IUser";
 
 @Component
 export default class TaskCreate extends Vue {
     get isAuthenticated(): boolean {
         return store.getters.isAuthenticated;
+    }
+
+    get categories(): ICategoryEdit[] {
+        return store.state.categoriesPlain;
+    }
+
+    get users(): IUser[] {
+        return store.state.users;
     }
 
     private featureCreate: IFeatureCreate = {
@@ -62,18 +94,25 @@ export default class TaskCreate extends Vue {
         startTime: null,
         endTime: null,
         categoryId: "",
-        userId: ""
+        appUserId: null
     };
 
     private errorMessage = "";
 
     async Create(): Promise<void> {
-        if (this.featureCreate.title === "") {
-            this.errorMessage = "Title field must be filled";
+        if (this.featureCreate.title === "" || this.featureCreate.categoryId === "") {
+            this.errorMessage = "Title and category fields must be filled";
+        } else if ((this.featureCreate.startTime !== null && this.featureCreate.endTime !== null) && (this.featureCreate.startTime > this.featureCreate.endTime)) {
+            this.errorMessage = "End date can't be earlier than start date";
         } else {
-            await store.dispatch("featureCreate", this.featureCreate);
-            router.push("/")
+            const feature = await store.dispatch("createFeature", this.featureCreate);
+            router.push("/task/" + feature.id)
         }
+    }
+
+    mounted(): void {
+        store.dispatch("getCategoriesPlain");
+        store.dispatch("getUsers");
     }
 }
 </script>

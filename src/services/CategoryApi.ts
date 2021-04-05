@@ -37,6 +37,25 @@ export abstract class CategoryApi {
         }
     }
 
+
+    static async getAllCategoriesPlain(jwt: string): Promise<ICategoryEdit[]> {
+        const url = 'GetCategoriesPlain';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<ICategoryEdit[]>(url, auth);
+            console.log('getAllCategoriesPlain response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
     static async getCategory(jwt: string, id: string): Promise<ICategoryEdit | null> {
         const url = 'GetCategory/' + id;
         const auth = {

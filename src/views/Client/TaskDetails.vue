@@ -24,13 +24,13 @@
                 <p class="bold">Description</p>
                 <hr>
                 <p>Category: {{feature.categoryName}}</p>
-                <p>Priority value: {{feature.priorityValue}}</p>
+                <p>Priority value: {{checkValue(feature.priorityValue)}}</p>
                 <p>Assignee: {{feature.assignee}}</p>
                 <p>Status: {{feature.featureStatus}}</p>
-                <p>Size: {{feature.size}}</p>
-                <p>Start date: {{moment(feature.startTime).format('DD.MM.YYYY')}}</p>
-                <p>End date: {{moment(feature.endTime).format('DD.MM.YYYY')}}</p>
-                <p>Duration: {{feature.duration}}</p>
+                <p>Size: {{checkValue(feature.size)}}</p>
+                <p>Start date: {{formatDate(feature.startTime)}}</p>
+                <p>End date: {{formatDate(feature.endTime)}}</p>
+                <p>Duration: {{checkValue(feature.duration)}} {{days(feature.duration)}}</p>
                 <p>Description: {{feature.description}}</p>
                 <br>
                 <p class="bold">Priority votings</p>
@@ -40,7 +40,7 @@
                 <p class="bold">Comments</p>
                 <hr>
                 <div v-for="comment in comments" :key="comment.id">
-                    <small class="text-muted">{{comment.user}} commented at {{moment(comment.timeCreated).format('DD.MM.YYYY HH:mm')}}</small>
+                    <small class="text-muted">{{comment.user}} commented at {{formatDateTime(comment.timeCreated)}}</small>
                     <div>{{comment.content}}</div>
                     <br>
                 </div>
@@ -52,7 +52,10 @@
                 <br>
                 <p class="bold">Change log</p>
                 <hr>
-                <p>To Do</p>
+                <p class="text-muted">Created: {{formatDateTime(feature.timeCreated)}} by {{feature.createdBy}}</p>
+                <p class="text-muted">Last edited: {{formatDateTime(feature.lastEdited)}}</p>
+                <hr>
+                <p class="text-muted" v-html="feature.changeLog.replace(/(?:\\n)/g, '<br />')"></p>
             </div>
             <div class="card-footer text-muted"></div>
         </div>
@@ -67,6 +70,8 @@ import { IFeature } from "@/domain/IFeature";
 import { ICommentCreate } from "@/domain/ICommentCreate";
 import { IComment } from "@/domain/IComment";
 import store from "../../store";
+import moment from "moment";
+import router from "@/router";
 
 @Component
 export default class TaskDetails extends Vue {
@@ -102,13 +107,46 @@ export default class TaskDetails extends Vue {
 
     async Delete(featureId: string): Promise<void> {
         store.dispatch("deleteFeature", featureId);
+        router.push("/");
     }
 
     async AddComment(): Promise<void> {
         if (this.commentCreate.content !== "") {
-            store.dispatch("createComment", this.commentCreate);
+            await store.dispatch("createComment", this.commentCreate);
             this.commentCreate.content = "";
+            location.reload();
         }
+    }
+
+    formatDate(date: Date | null): string {
+        if (date === null) {
+            return "";
+        }
+        return moment(date).format('DD.MM.YYYY');
+    }
+
+    formatDateTime(date: Date | null): string {
+        if (date === null) {
+            return "";
+        }
+        return moment(date).format('DD.MM.YYYY HH:mm');
+    }
+
+    checkValue(size: number): string | number {
+        if (size === 0) {
+            return "";
+        }
+        return size;
+    }
+
+    days(count: number): string {
+        if (count === 0) {
+            return "";
+        }
+        if (count === 1) {
+            return "day";
+        }
+        return "days";
     }
 
     mounted(): void {

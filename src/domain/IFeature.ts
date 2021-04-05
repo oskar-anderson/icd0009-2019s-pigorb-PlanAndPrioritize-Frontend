@@ -4,12 +4,13 @@ export interface IFeature {
     size: number;
     priorityValue: number;
     description: string;
-    startTime: Date;
-    endTime: Date;
+    startTime: Date | null;
+    endTime: Date | null;
     duration: number;
     categoryId: string;
-    userId: string;
+    appUserId: string | null;
     timeCreated: Date;
+    createdBy: string;
     lastEdited: Date;
     changeLog: string;
 

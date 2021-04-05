@@ -49,7 +49,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "../../store";
 import router from '@/router';
 import { ICategoryEdit } from "@/domain/ICategoryEdit";
-import { ICategory } from "@/domain/ICategory";
 
 @Component
 export default class CategoryEdit extends Vue {

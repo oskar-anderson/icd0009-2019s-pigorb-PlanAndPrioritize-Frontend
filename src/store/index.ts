@@ -22,6 +22,7 @@ import { IFeatureEdit } from '@/domain/IFeatureEdit';
 import { IComment } from '@/domain/IComment';
 import { ICommentCreate } from '@/domain/ICommentCreate';
 import { CommentApi } from '@/services/CommentApi';
+import { IFeatureState } from '@/domain/IFeatureState';
 
 Vue.use(Vuex)
 
@@ -33,10 +34,13 @@ export default new Vuex.Store({
         requirePasswordChange: true,
 
         feature: null as IFeature | null,
+        featurePlain: null as IFeatureEdit | null,
         features: [] as IFeature[],
+        featureStates: [] as IFeatureState[],
 
         category: null as ICategoryEdit | null,
         categories: [] as ICategory[],
+        categoriesPlain: [] as ICategoryEdit[],
 
         comments: [] as IComment[]
     },
@@ -68,8 +72,18 @@ export default new Vuex.Store({
         setFeature(state, feature: IFeature) {
             state.feature = feature;
         },
+        setFeaturePlain(state, feature: IFeatureEdit) {
+            state.featurePlain = feature;
+        },
+        setFeatureStates(state, states: IFeatureState[]) {
+            state.featureStates = states;
+        },
+
         setCategories(state, categories: ICategory[]) {
             state.categories = categories;
+        },
+        setCategoriesPlain(state, categories: ICategoryEdit[]) {
+            state.categoriesPlain = categories;
         },
         setCategory(state, category: ICategoryEdit) {
             state.category = category;
@@ -195,12 +209,16 @@ export default new Vuex.Store({
             const feature = await FeatureApi.getFeature(context.getters.jwt, id);
             context.commit('setFeature', feature);
         },
-        async createFeature(context, feature: IFeatureCreate): Promise<boolean> {
+        async getFeaturePlain(context, id: string): Promise<void> {
+            const feature = await FeatureApi.getFeaturePlain(context.getters.jwt, id);
+            context.commit('setFeaturePlain', feature);
+        },
+        async createFeature(context, feature: IFeatureCreate): Promise<IFeature | null> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
-                const result = await FeatureApi.createFeature(feature, context.getters.jwt);
-                return result;
+                const createdFeature = await FeatureApi.createFeature(feature, context.getters.jwt);
+                return createdFeature;
             }
-            return false;
+            return null;
         },
         async deleteFeature(context, featureId: string): Promise<void> {
             if (context.getters.isAdmin && context.getters.jwt) {
@@ -216,10 +234,18 @@ export default new Vuex.Store({
             }
             return false;
         },
+        async getFeatureStates(context): Promise<void> {
+            const states = await FeatureApi.getFeatureStates(context.getters.jwt);
+            context.commit('setFeatureStates', states);
+        },
 
         async getCategories(context): Promise<void> {
             const categories = await CategoryApi.getAllCategories(context.getters.jwt);
             context.commit('setCategories', categories);
+        },
+        async getCategoriesPlain(context): Promise<void> {
+            const categories = await CategoryApi.getAllCategoriesPlain(context.getters.jwt);
+            context.commit('setCategoriesPlain', categories);
         },
         async getCategory(context, id: string): Promise<void> {
             const category = await CategoryApi.getCategory(context.getters.jwt, id);

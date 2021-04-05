@@ -48,3 +48,12 @@
 .bold {
   font-weight: bold;
 }
+
+.hr-grey { 
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #818181;
+  margin-left: 15px; 
+  margin-right: 15px;
+}

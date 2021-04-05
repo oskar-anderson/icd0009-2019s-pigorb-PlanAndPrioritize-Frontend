@@ -1,5 +1,61 @@
 <template>
     <div class="main">
+    <h5>Create new user</h5>
+    <br>
+    <h6 v-if="userCreatingSucceeded === true" class="text-success">{{successMessage}}</h6>
+    <h6 v-if="incorrectEmail === true" class="text-danger">Inncorrect email</h6>
+    <h6 v-if="passWordsDontMatch === true" class="text-danger">Passwords don't match!</h6>
+    <h6 v-if="userCreatingFailed === true" class="text-danger">{{errorMessage}}</h6>
+    <div class="row">
+        <div class="col-md-3">
+            <form>
+            <div class="form-group">
+                <label for="Input_Email">Email</label>
+                <input v-model="userToCreate.email" class="form-control" type="email" id="Input_Email" />
+            </div>
+            <div class="form-group">
+                <label for="Input_firstName">First name</label>
+                <input v-model="userToCreate.firstName" class="form-control" type="text" id="Input_firstName" />
+            </div>
+            <div class="form-group">
+                <label for="Input_lastName">Last name</label>
+                <input v-model="userToCreate.lastName" class="form-control" type="text" id="Input_lastName" />
+            </div>
+            <div class="form-group">
+                <label for="Input_Password">Password</label>
+                <input
+                    v-model="userToCreate.password"
+                    class="form-control"
+                    type="password"
+                    id="Input_Password"
+                />
+            </div>
+            <div class="form-group">
+                <label for="Input_Password_Confirm">Confirm password</label>
+                <input
+                    v-model="confirmPassword"
+                    class="form-control"
+                    type="password"
+                    id="Input_Password_Confirm"
+                />
+            </div>
+                <div class="form-group">
+                    <label class="control-label">Role</label>
+                    <select class="form-control" v-model="userToCreate.roleName">
+                        <option v-for="role in roles" :key="role.roleName">
+                            {{role.roleName}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" @click="createUserWithRole()" class="btn btn-outline-success my-2 my-sm-0">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+
     <h5>Add role to user</h5>
     <br>
     <h6 v-if="roleAddingFailed === true" class="text-danger">{{errorMessage}}</h6>
@@ -90,61 +146,6 @@
         </div>
     </div>
     <hr />
-
-    <h5>Create new user</h5>
-    <br>
-    <h6 v-if="userCreatingSucceeded === true" class="text-success">{{successMessage}}</h6>
-    <h6 v-if="incorrectEmail === true" class="text-danger">Inncorrect email</h6>
-    <h6 v-if="passWordsDontMatch === true" class="text-danger">Passwords don't match!</h6>
-    <h6 v-if="userCreatingFailed === true" class="text-danger">{{errorMessage}}</h6>
-    <div class="row">
-        <div class="col-md-3">
-            <form>
-            <div class="form-group">
-                <label for="Input_Email">Email</label>
-                <input v-model="userToCreate.email" class="form-control" type="email" id="Input_Email" />
-            </div>
-            <div class="form-group">
-                <label for="Input_firstName">First name</label>
-                <input v-model="userToCreate.firstName" class="form-control" type="text" id="Input_firstName" />
-            </div>
-            <div class="form-group">
-                <label for="Input_lastName">Last name</label>
-                <input v-model="userToCreate.lastName" class="form-control" type="text" id="Input_lastName" />
-            </div>
-            <div class="form-group">
-                <label for="Input_Password">Password</label>
-                <input
-                    v-model="userToCreate.password"
-                    class="form-control"
-                    type="password"
-                    id="Input_Password"
-                />
-            </div>
-            <div class="form-group">
-                <label for="Input_Password_Confirm">Confirm password</label>
-                <input
-                    v-model="confirmPassword"
-                    class="form-control"
-                    type="password"
-                    id="Input_Password_Confirm"
-                />
-            </div>
-                <div class="form-group">
-                    <label class="control-label">Role</label>
-                    <select class="form-control" v-model="userToCreate.roleName">
-                        <option v-for="role in roles" :key="role.roleName">
-                            {{role.roleName}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" @click="createUserWithRole()" class="btn btn-outline-success my-2 my-sm-0">Create</button>
-                </div>
-            </form>
-        </div>
-    </div>
     </div>
 </template>
 
@@ -277,6 +278,11 @@ export default class CreateDeleteUser extends Vue {
             } else {
                 this.userCreatingSucceeded = true;
                 this.successMessage = 'User created!';
+                this.userToCreate.firstName = "";
+                this.userToCreate.lastName = "";
+                this.userToCreate.email = "";
+                this.userToCreate.password = "";
+                this.confirmPassword = "";
             }
         }
     }

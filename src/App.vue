@@ -20,6 +20,7 @@
             <router-link to="/roadmap" class="navbar-brand">Roadmap</router-link>
             <router-link to="/assigned" class="navbar-brand">Assigned Votings</router-link>
             <router-link to="/categories" class="navbar-brand">Categories</router-link>
+            <hr class="hr-grey" v-if="isAdmin === true">
             <span v-if="isAdmin === true">
                 <router-link to="/usermanager" class="navbar-brand">Manage Users</router-link>
             </span>
