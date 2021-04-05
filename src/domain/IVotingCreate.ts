@@ -3,4 +3,6 @@ export interface IVotingCreate {
     description: string;
     startTime: Date | null;
     endTime: Date | null;
+    users: string[];
+    features: string[];
 }

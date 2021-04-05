@@ -106,4 +106,22 @@ export abstract class VotingApi {
             return false;
         }
     }
+
+    static async getVotingsForFeature(id: string, jwt: string): Promise<IVoting[]> {
+        const url = 'GetVotingsForFeature/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IVoting[]>(url, auth);
+            console.log('GetVotingsForFeature response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
 }

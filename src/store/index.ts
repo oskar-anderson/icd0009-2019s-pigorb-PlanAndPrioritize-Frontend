@@ -26,6 +26,8 @@ import { IFeatureState } from '@/domain/IFeatureState';
 import { IVoting } from '@/domain/IVoting';
 import { VotingApi } from '@/services/VotingApi';
 import { IVotingCreate } from '@/domain/IVotingCreate';
+import { IAppUser } from '@/domain/IAppUser';
+import { UserApi } from '@/services/UserApi';
 
 Vue.use(Vuex)
 
@@ -48,7 +50,9 @@ export default new Vuex.Store({
         comments: [] as IComment[],
 
         voting: null as IVoting | null,
-        votings: [] as IVoting[]
+        votings: [] as IVoting[],
+        featuresForVoting: [] as IFeature[],
+        usersForVoting: [] as IAppUser[]
     },
 
     mutations: {
@@ -104,6 +108,12 @@ export default new Vuex.Store({
         },
         setVoting(state, voting: IVoting) {
             state.voting = voting;
+        },
+        setFeaturesForVoting(state, features: IFeature[]) {
+            state.featuresForVoting = features;
+        },
+        setUsersForVoting(state, users: IAppUser[]) {
+            state.usersForVoting = users;
         }
     },
 
@@ -320,6 +330,18 @@ export default new Vuex.Store({
                 return result;
             }
             return false;
+        },
+        async getFeaturesForVoting(context, votingId: string): Promise<void> {
+            const features = await FeatureApi.getFeaturesForVoting(context.getters.jwt, votingId);
+            context.commit('setFeaturesForVoting', features);
+        },
+        async getUsersForVoting(context, votingId: string): Promise<void> {
+            const users = await UserApi.getUsersForVoting(context.getters.jwt, votingId);
+            context.commit('setUsersForVoting', users);
+        },
+        async getVotingsForFeature(context, featureId: string): Promise<void> {
+            const votings = await VotingApi.getVotingsForFeature(featureId, context.getters.jwt);
+            context.commit('setVotings', votings);
         }
     },
 

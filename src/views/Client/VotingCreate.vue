@@ -12,7 +12,7 @@
 
         <hr />
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <form>
                     <h6 v-if="errorMessage != ''" class="text-danger">{{errorMessage}}</h6>
 
@@ -31,6 +31,28 @@
                     <div class="form-group">
                         <label class="control-label">End time</label>
                         <input type="datetime-local" v-model="votingCreate.endTime" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Assign to users</label>
+                        <img src="../../assets/icons/clear_icon.png" height="15" style="float: right;" alt="clear-icon" @click="ClearUsers()">
+                        <select multiple class="form-control" v-model="votingCreate.users">
+                            <option
+                                v-for="user in users"
+                                v-bind:value="user.id"
+                                :key="user.id"
+                            >{{user.email}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Add features to voting</label>
+                        <img src="../../assets/icons/clear_icon.png" height="15" style="float: right;" alt="clear-icon" @click="ClearFeatures()">
+                        <select multiple class="form-control" v-model="votingCreate.features">
+                            <option
+                                v-for="feature in features"
+                                v-bind:value="feature.id"
+                                :key="feature.id"
+                            >{{feature.title}}</option>
+                        </select>
                     </div>
                     <div>
                         <router-link :to="{name: 'Votings'}">
@@ -58,6 +80,8 @@ import { Component, Vue } from "vue-property-decorator";
 import store from "../../store";
 import router from '@/router';
 import { IVotingCreate } from "@/domain/IVotingCreate";
+import { IUser } from "@/domain/IUser";
+import { IFeature } from "@/domain/IFeature";
 
 @Component
 export default class VotingCreate extends Vue {
@@ -65,11 +89,21 @@ export default class VotingCreate extends Vue {
         return store.getters.isAuthenticated;
     }
 
+    get features(): IFeature[] {
+        return store.state.features;
+    }
+
+    get users(): IUser[] {
+        return store.state.users;
+    }
+
     private votingCreate: IVotingCreate = {
         title: "",
         description: "",
         startTime: null,
-        endTime: null
+        endTime: null,
+        users: [],
+        features: []
     };
 
     private errorMessage = "";
@@ -83,6 +117,19 @@ export default class VotingCreate extends Vue {
             await store.dispatch("createVoting", this.votingCreate);
             router.push("/votings")
         }
+    }
+
+    ClearUsers(): void {
+        this.votingCreate.users = [];
+    }
+
+    ClearFeatures(): void {
+        this.votingCreate.features = [];
+    }
+
+    mounted() {
+        store.dispatch("getUsers");
+        store.dispatch("getFeatures");
     }
 }
 </script>

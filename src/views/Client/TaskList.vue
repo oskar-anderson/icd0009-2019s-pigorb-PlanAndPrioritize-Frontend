@@ -45,14 +45,13 @@
                     <td>{{formatDate(feature.startTime, feature.endTime)}}</td>
                     <td>
                         <div>
+                            <span v-if="isAdmin === true">
+                                <img src="../../assets/icons/delete_icon.png" style="float: right;" height="20" alt="delete-icon" @click="ConfirmDelete(feature)">
+                            </span>
                             <span>
                                 <router-link :to="{name: 'TaskEdit', params: { id: feature.id }}">
-                                    <img src="../../assets/icons/edit_icon.png" height="20" alt="edit-icon">
+                                    <img src="../../assets/icons/edit_icon.png" style="float: right; margin-right: 150x;" height="20" alt="edit-icon">
                                 </router-link>
-                            </span>
-                            &nbsp;
-                            <span v-if="isAdmin === true">
-                                <img src="../../assets/icons/delete_icon.png" height="20" alt="delete-icon" @click="ConfirmDelete(feature)">
                             </span>
                         </div>
                     </td>

@@ -9,7 +9,7 @@
 
         <div v-else class="main">
         <div>
-            <h5>Votings
+            <h5>Priority votings
             <router-link :to="{name: 'VotingCreate'}">
               <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="float: right;">Add voting</button>
               </router-link></h5>
@@ -26,20 +26,23 @@
             </thead>
             <tbody>
                 <tr v-for="voting in votings" :key="voting.id">
-                    <td>{{voting.title}}</td>
+                    <td>
+                         <router-link :to="{name: 'VotingDetails', params: { id: voting.id }}">
+                            {{voting.title}}
+                        </router-link>
+                    </td>
                     <td style="max-width: 50em;">{{voting.description}}</td>
                     <td>{{voting.votingStatus}}</td>
                     <td>{{formatDates(voting.startTime, voting.endTime)}}</td>
                     <td>
                         <div>
                             <span>
-                                <router-link :to="{name: 'VotingEdit', params: { id: voting.id }}">
-                                    <img src="../../assets/icons/edit_icon.png" height="20" alt="edit-icon">
-                                </router-link>
-                            </span>
-                            &nbsp;
                             <span>
-                                <img src="../../assets/icons/delete_icon.png" height="20" alt="delete-icon" @click="ConfirmDelete(voting)">
+                                <img src="../../assets/icons/delete_icon.png" style="float: right;" height="20" alt="delete-icon" @click="ConfirmDelete(voting)">
+                            </span>
+                                <router-link :to="{name: 'VotingEdit', params: { id: voting.id }}">
+                                    <img src="../../assets/icons/edit_icon.png" style="float: right; margin-right: 10px;" height="20" alt="edit-icon">
+                                </router-link>
                             </span>
                         </div>
                     </td>

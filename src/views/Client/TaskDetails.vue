@@ -35,7 +35,13 @@
                 <br>
                 <p class="bold">Priority votings</p>
                 <hr>
-                <p>To Do</p>
+                <ul v-for="voting in votings" :key="voting.id">
+                    <li>
+                        <router-link :to="{name: 'VotingDetails', params: { id: voting.id }}">
+                            {{voting.title}}
+                        </router-link>
+                    </li>
+                </ul>
                 <br>
                 <p class="bold">Comments</p>
                 <hr>
@@ -72,6 +78,7 @@ import { IComment } from "@/domain/IComment";
 import store from "../../store";
 import moment from "moment";
 import router from "@/router";
+import { IVoting } from "@/domain/IVoting";
 
 @Component
 export default class TaskDetails extends Vue {
@@ -92,6 +99,10 @@ export default class TaskDetails extends Vue {
 
     get comments(): IComment[] {
         return store.state.comments;
+    }
+
+    get votings(): IVoting[] {
+        return store.state.votings;
     }
 
     private commentCreate: ICommentCreate = {
@@ -152,6 +163,7 @@ export default class TaskDetails extends Vue {
     mounted(): void {
         store.dispatch("getFeature", this.id);
         store.dispatch("getComments", this.id);
+        store.dispatch("getVotingsForFeature", this.id);
     }
 }
 </script>

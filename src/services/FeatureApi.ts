@@ -144,4 +144,22 @@ export abstract class FeatureApi {
             return [];
         }
     }
+
+    static async getFeaturesForVoting(jwt: string, id: string): Promise<IFeature[]> {
+        const url = 'GetFeaturesForVoting/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeature[]>(url, auth);
+            console.log('getFeaturesForVoting response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
 }
