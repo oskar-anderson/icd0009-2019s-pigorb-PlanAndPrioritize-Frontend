@@ -11,16 +11,33 @@
             <div class="card-header">
                 <h5>{{feature.title}}
                     <span v-if="isAdmin === true">
-                        <img src="../../assets/icons/delete_icon.png" height="20" style="float: right;" alt="delete-icon" @click="ConfirmDelete(feature)">
+                        <img src="../../assets/icons/delete_icon.png" height="20" style="float: right;" alt="delete-icon" @click="confirmDelete(feature)">
                     </span>
                     <span>
                         <router-link :to="{name: 'TaskEdit', params: { id: feature.id }}">
                             <img src="../../assets/icons/edit_icon.png" height="20" style="float: right; margin-right: 15px;" alt="edit-icon">
                         </router-link>
                     </span>
+                     <span class="clickable" @click="displayVotingSelection()">+ Add to voting
+                    </span>
                 </h5>
             </div>
             <div class="card-body">
+
+                <div class="row" v-if="chooseVoting === true">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Choose voting</label>
+                            <select class="form-control" v-model="featureInVoting.votingId">
+                                <option v-for="voting in activeVotings" :key="voting.id" v-bind:value="voting.id">{{voting.title}}</option>
+                            </select>
+                            <br>
+                            <button type="submit" class="btn btn-outline-success my-2 my-sm-0" @click="addToVoting()">Add to voting</button>
+                            <br><br>
+                        </div>
+                     </div>
+                </div>
+
                 <p class="bold">Description</p>
                 <hr>
                 <p>Category: {{feature.categoryName}}</p>
@@ -53,7 +70,7 @@
                  <div class="form-group">
                     <textarea v-model="commentCreate.content" class="form-control" />
                 </div>
-                <button type="submit" class="btn btn-outline-success my-2 my-sm-0" @click="AddComment()">Comment</button>
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0" @click="addComment()">Comment</button>
                 <br>
                 <br>
                 <p class="bold">Change log</p>
@@ -79,6 +96,7 @@ import store from "../../store";
 import moment from "moment";
 import router from "@/router";
 import { IVoting } from "@/domain/IVoting";
+import { IFeatureInVotingCreate } from "@/domain/IFeatureInVotingCreate";
 
 @Component
 export default class TaskDetails extends Vue {
@@ -105,23 +123,34 @@ export default class TaskDetails extends Vue {
         return store.state.votings;
     }
 
+    get activeVotings(): IVoting[] {
+        return store.state.activeVotings;
+    }
+
     private commentCreate: ICommentCreate = {
         content: "",
         featureId: this.id
     };
 
-    ConfirmDelete(feature: IFeature): void {
+    private featureInVoting: IFeatureInVotingCreate = {
+        featureId: this.id,
+        votingId: ""
+    };
+
+    private chooseVoting = false;
+
+    confirmDelete(feature: IFeature): void {
         if (confirm("Delete task: '" + feature.title + "'?")) {
-            this.Delete(feature.id);
+            this.delete(feature.id);
         }
     }
 
-    async Delete(featureId: string): Promise<void> {
+    async delete(featureId: string): Promise<void> {
         store.dispatch("deleteFeature", featureId);
         router.push("/");
     }
 
-    async AddComment(): Promise<void> {
+    async addComment(): Promise<void> {
         if (this.commentCreate.content !== "") {
             await store.dispatch("createComment", this.commentCreate);
             this.commentCreate.content = "";
@@ -160,10 +189,22 @@ export default class TaskDetails extends Vue {
         return "days";
     }
 
+    displayVotingSelection(): void {
+        this.chooseVoting = true;
+    }
+
+    async addToVoting(): Promise<void> {
+        const result = await store.dispatch("addFeatureToVoting", this.featureInVoting);
+        if (result === true) {
+            location.reload();
+        }
+    }
+
     mounted(): void {
         store.dispatch("getFeature", this.id);
         store.dispatch("getComments", this.id);
         store.dispatch("getVotingsForFeature", this.id);
+        store.dispatch("getActiveVotings");
     }
 }
 </script>

@@ -12,6 +12,7 @@ import TaskCreate from '../views/Client/TaskCreate.vue'
 import TaskEdit from '../views/Client/TaskEdit.vue'
 import TaskDetails from '../views/Client/TaskDetails.vue'
 
+import Contact from '../views/Client/Contact.vue'
 import Roadmap from '../views/Client/Roadmap.vue'
 import AssignedVotings from '../views/Client/AssignedVotings.vue'
 import Categories from '../views/Client/Categories.vue'
@@ -45,7 +46,9 @@ const routes: Array<RouteConfig> = [
     { path: '/usermanager', name: 'UserManagerIndex', component: UserManagerIndex },
     { path: '/user', name: 'CreateDeleteUser', component: CreateDeleteUser },
     { path: '/role', name: 'CreateDeleteRole', component: CreateDeleteRole },
-    { path: '/changePassword', name: 'ChangePassword', component: ChangePassword }
+    { path: '/changePassword', name: 'ChangePassword', component: ChangePassword },
+
+    { path: '/contact', name: 'Contact', component: Contact }
 ]
 
 const router = new VueRouter({

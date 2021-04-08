@@ -1,6 +1,8 @@
 import Axios from 'axios';
 import { IVoting } from '@/domain/IVoting';
 import { IVotingCreate } from '@/domain/IVotingCreate';
+import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
+import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
 
 interface IResponse {
     status: string;
@@ -36,6 +38,24 @@ export abstract class VotingApi {
         }
     }
 
+    static async getActiveVotings(jwt: string): Promise<IVoting[]> {
+        const url = 'GetActiveVotings';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IVoting[]>(url, auth);
+            console.log('GetActiveVotings response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
     static async getVoting(jwt: string, id: string): Promise<IVoting | null> {
         const url = 'GetVoting/' + id;
         const auth = {
@@ -54,13 +74,13 @@ export abstract class VotingApi {
         }
     }
 
-    static async createVoting(Category: IVotingCreate, jwt: string): Promise<boolean> {
+    static async createVoting(voting: IVotingCreate, jwt: string): Promise<boolean> {
         const url = 'CreateVoting';
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
         try {
-            const response = await this.axios.post<IVoting>(url, Category, auth);
+            const response = await this.axios.post<IVoting>(url, voting, auth);
             console.log('CreateVoting response', response);
             if (response.status === 200) {
                 return true;
@@ -122,6 +142,60 @@ export abstract class VotingApi {
         } catch (error) {
             console.log('error: ', (error as Error).message);
             return [];
+        }
+    }
+
+    static async removeFeatureFromVoting(featureRemove: IFeatureInVotingCreate, jwt: string): Promise<boolean> {
+        const url = 'RemoveFeature';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.post<IFeatureInVotingCreate>(url, featureRemove, auth);
+            console.log('RemoveFeature response', response);
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
+
+    static async removeUserFromVoting(userRemove: IUserInVotingCreate, jwt: string): Promise<boolean> {
+        const url = 'RemoveUser';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.post<IUserInVotingCreate>(url, userRemove, auth);
+            console.log('RemoveUser response', response);
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
+
+    static async addFeatureToVoting(featureInVoting: IFeatureInVotingCreate, jwt: string): Promise<boolean> {
+        const url = 'AddFeatureToVoting';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.post<IFeatureInVotingCreate>(url, featureInVoting, auth);
+            console.log('AddFeatureToVoting response', response);
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
         }
     }
 }

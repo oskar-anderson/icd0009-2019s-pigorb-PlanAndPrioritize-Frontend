@@ -28,6 +28,8 @@ import { VotingApi } from '@/services/VotingApi';
 import { IVotingCreate } from '@/domain/IVotingCreate';
 import { IAppUser } from '@/domain/IAppUser';
 import { UserApi } from '@/services/UserApi';
+import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
+import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
 
 Vue.use(Vuex)
 
@@ -51,6 +53,7 @@ export default new Vuex.Store({
 
         voting: null as IVoting | null,
         votings: [] as IVoting[],
+        activeVotings: [] as IVoting[],
         featuresForVoting: [] as IFeature[],
         usersForVoting: [] as IAppUser[]
     },
@@ -105,6 +108,9 @@ export default new Vuex.Store({
 
         setVotings(state, votings: IVoting[]) {
             state.votings = votings;
+        },
+        setActiveVotings(state, votings: IVoting[]) {
+            state.activeVotings = votings;
         },
         setVoting(state, voting: IVoting) {
             state.voting = voting;
@@ -307,6 +313,10 @@ export default new Vuex.Store({
             const votings = await VotingApi.getAllVotings(context.getters.jwt);
             context.commit('setVotings', votings);
         },
+        async getActiveVotings(context): Promise<void> {
+            const votings = await VotingApi.getActiveVotings(context.getters.jwt);
+            context.commit('setActiveVotings', votings);
+        },
         async getVoting(context, id: string): Promise<void> {
             const voting = await VotingApi.getVoting(context.getters.jwt, id);
             context.commit('setVoting', voting);
@@ -342,6 +352,22 @@ export default new Vuex.Store({
         async getVotingsForFeature(context, featureId: string): Promise<void> {
             const votings = await VotingApi.getVotingsForFeature(featureId, context.getters.jwt);
             context.commit('setVotings', votings);
+        },
+        async removeFeatureFromVoting(context, featureRemove: IFeatureInVotingCreate): Promise<void> {
+            await VotingApi.removeFeatureFromVoting(featureRemove, context.getters.jwt);
+            const features = await FeatureApi.getFeaturesForVoting(context.getters.jwt, featureRemove.votingId);
+            context.commit('setFeaturesForVoting', features);
+        },
+        async removeUserFromVoting(context, userRemove: IUserInVotingCreate): Promise<void> {
+            await VotingApi.removeUserFromVoting(userRemove, context.getters.jwt);
+            const users = await UserApi.getUsersForVoting(context.getters.jwt, userRemove.votingId);
+            context.commit('setUsersForVoting', users);
+        },
+        async addFeatureToVoting(context, featureInVoting: IFeatureInVotingCreate): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                return await VotingApi.addFeatureToVoting(featureInVoting, context.getters.jwt);
+            }
+            return false;
         }
     },
 

@@ -27,6 +27,10 @@
             <span v-if="isAdmin === true">
                 <router-link to="/usermanager" class="navbar-brand">Manage Users</router-link>
             </span>
+            <hr class="hr-grey">
+            <span>
+                <router-link to="/contact" class="navbar-brand">Contact</router-link>
+            </span>
         </div>
         <div class="container-fluid">
             <main role="main">

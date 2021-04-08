@@ -50,7 +50,7 @@
                             </span>
                             <span>
                                 <router-link :to="{name: 'TaskEdit', params: { id: feature.id }}">
-                                    <img src="../../assets/icons/edit_icon.png" style="float: right; margin-right: 150x;" height="20" alt="edit-icon">
+                                    <img src="../../assets/icons/edit_icon.png" style="float: right; margin-right: 10px;" height="20" alt="edit-icon">
                                 </router-link>
                             </span>
                         </div>
@@ -114,90 +114,90 @@ export default class TaskList extends Vue {
 
     private titleSort = 1;
 
-    sortByTitle(): IFeature[] {
+    sortByTitle(): void {
         if (this.titleSort === 1) {
-            this.titleSort *= -1;
-            return this.features.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+            this.features.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+        } else {
+            this.features.sort((a, b) => b.title.toLowerCase().localeCompare(a.title.toLowerCase()));
         }
         this.titleSort *= -1;
-        return this.features.sort((a, b) => b.title.toLowerCase().localeCompare(a.title.toLowerCase()));
     }
 
     private categorySort = 1;
 
-    sortByCategory(): IFeature[] {
+    sortByCategory(): void {
         if (this.categorySort === 1) {
-            this.categorySort *= -1;
-            return this.features.sort((a, b) => a.categoryName.toLowerCase().localeCompare(b.categoryName.toLowerCase()));
+            this.features.sort((a, b) => a.categoryName.toLowerCase().localeCompare(b.categoryName.toLowerCase()));
+        } else {
+            this.features.sort((a, b) => b.categoryName.toLowerCase().localeCompare(a.categoryName.toLowerCase()));
         }
         this.categorySort *= -1;
-        return this.features.sort((a, b) => b.categoryName.toLowerCase().localeCompare(a.categoryName.toLowerCase()));
     }
 
     private sizeSort = 1;
 
-    sortBySize(): IFeature[] {
+    sortBySize(): void {
         if (this.sizeSort === 1) {
-            this.sizeSort *= -1;
-            return this.features.sort((a, b) => b.size - a.size);
+            this.features.sort((a, b) => b.size - a.size);
+        } else {
+            this.features.sort((a, b) => a.size - b.size);
         }
         this.sizeSort *= -1;
-        return this.features.sort((a, b) => a.size - b.size);
     }
 
     private assigneeSort = 1;
 
-    sortByAssignee(): IFeature[] {
+    sortByAssignee(): void {
         if (this.assigneeSort === 1) {
-            this.assigneeSort *= -1;
-            return this.features.sort((a, b) => a.assignee.toLowerCase().localeCompare(b.assignee.toLowerCase()));
+            this.features.sort((a, b) => a.assignee.toLowerCase().localeCompare(b.assignee.toLowerCase()));
+        } else {
+            this.features.sort((a, b) => b.assignee.toLowerCase().localeCompare(a.assignee.toLowerCase()));
         }
         this.assigneeSort *= -1;
-        return this.features.sort((a, b) => b.assignee.toLowerCase().localeCompare(a.assignee.toLowerCase()));
     }
 
     private prioritySort = 1;
 
-    sortByPriority(): IFeature[] {
+    sortByPriority(): void {
         if (this.prioritySort === 1) {
-            this.prioritySort *= -1;
-            return this.features.sort((a, b) => b.priorityValue - a.priorityValue);
+            this.features.sort((a, b) => b.priorityValue - a.priorityValue);
+        } else {
+            this.features.sort((a, b) => a.priorityValue - b.priorityValue);
         }
         this.prioritySort *= -1;
-        return this.features.sort((a, b) => a.priorityValue - b.priorityValue);
     }
 
     private statusSort = 1;
 
-    sortByStatus(): IFeature[] {
+    sortByStatus(): void {
         if (this.statusSort === 1) {
-            this.statusSort *= -1;
-            return this.features.sort((a, b) => a.featureStatus.toLowerCase().localeCompare(b.featureStatus.toLowerCase()));
+            this.features.sort((a, b) => a.featureStatus.toLowerCase().localeCompare(b.featureStatus.toLowerCase()));
+        } else {
+            this.features.sort((a, b) => b.featureStatus.toLowerCase().localeCompare(a.featureStatus.toLowerCase()));
         }
         this.statusSort *= -1;
-        return this.features.sort((a, b) => b.featureStatus.toLowerCase().localeCompare(a.featureStatus.toLowerCase()));
     }
 
     private datesSort = 1;
 
-    sortByStartDate(): IFeature[] {
+    sortByStartDate(): void {
         if (this.datesSort === 1) {
-            this.datesSort *= -1;
-            return this.features.sort((a, b) => (b.startTime === null ? 0 : new Date(b.startTime).getTime()) - (a.startTime === null ? 0 : new Date(a.startTime).getTime()));
+            this.features.sort((a, b) => (b.startTime === null ? 0 : new Date(b.startTime).getTime()) - (a.startTime === null ? 0 : new Date(a.startTime).getTime()));
+        } else {
+            this.features.sort((a, b) => (a.startTime === null ? 0 : new Date(a.startTime).getTime()) - (b.startTime === null ? 0 : new Date(b.startTime).getTime()));
         }
         this.datesSort *= -1;
-        return this.features.sort((a, b) => (a.startTime === null ? 0 : new Date(a.startTime).getTime()) - (b.startTime === null ? 0 : new Date(b.startTime).getTime()));
     }
 
     private timeCreatedSort = -1;
 
-    sortByCreationTime(): IFeature[] {
+    sortByCreationTime(): void {
         if (this.datesSort === 1) {
-            this.datesSort *= -1;
-            return this.features.sort((a, b) => new Date(b.timeCreated).getTime() - new Date(a.timeCreated).getTime());
+            this.features.sort((a, b) => new Date(b.timeCreated).getTime() - new Date(a.timeCreated).getTime());
+        } else {
+            this.features.sort((a, b) => new Date(a.timeCreated).getTime() - new Date(b.timeCreated).getTime());
         }
         this.datesSort *= -1;
-        return this.features.sort((a, b) => new Date(a.timeCreated).getTime() - new Date(b.timeCreated).getTime());
     }
 
     mounted(): void {

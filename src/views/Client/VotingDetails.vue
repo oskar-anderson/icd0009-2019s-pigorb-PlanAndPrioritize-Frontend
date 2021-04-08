@@ -84,8 +84,8 @@ import moment from "moment";
 import router from "@/router";
 import { IVoting } from "@/domain/IVoting";
 import { IAppUser } from "@/domain/IAppUser";
-import { IFeatureRemoveFromVoting } from "@/domain/IFeatureRemoveFromVoting";
-import { IAppUserRemoveFromVoting } from "@/domain/IAppUserRemoveFromVoting";
+import { IFeatureInVotingCreate } from "@/domain/IFeatureInVotingCreate";
+import { IUserInVotingCreate } from "@/domain/IUserInVotingCreate";
 
 @Component
 export default class TaskDetails extends Vue {
@@ -112,12 +112,12 @@ export default class TaskDetails extends Vue {
         return store.state.usersForVoting;
     }
 
-    private removeFeature: IFeatureRemoveFromVoting = {
+    private removeFeature: IFeatureInVotingCreate = {
         featureId: "",
         votingId: this.id
     }
 
-    private removeUser: IAppUserRemoveFromVoting = {
+    private removeUser: IUserInVotingCreate = {
         appUserId: "",
         votingId: this.id
     }
@@ -140,8 +140,11 @@ export default class TaskDetails extends Vue {
     }
 
     async RemoveFeatureFromVoting(featureId: string): Promise<void> {
-        this.removeFeature.votingId = featureId;
-        store.dispatch("removeFeatureFromVoting", this.removeFeature); // ToDo
+        this.removeFeature.featureId = featureId;
+        const response = await store.dispatch("removeFeatureFromVoting", this.removeFeature);
+        if (response === true) {
+            location.reload();
+        }
     }
 
     ConfirmRemoveUser(user: IAppUser): void {
@@ -151,8 +154,11 @@ export default class TaskDetails extends Vue {
     }
 
     async RemoveUserFromVoting(userId: string): Promise<void> {
-        this.removeUser.votingId = userId;
-        store.dispatch("removeUserFromVoting", this.removeUser); // ToDo
+        this.removeUser.appUserId = userId;
+        const response = await store.dispatch("removeUserFromVoting", this.removeUser);
+        if (response === true) {
+            location.reload();
+        }
     }
 
     formatDates(startTime: Date | null, endTime: Date | null): string {

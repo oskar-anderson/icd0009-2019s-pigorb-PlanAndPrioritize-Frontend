@@ -18,10 +18,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Voting</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Open for voting</th>
+                    <th>Voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByTitle()"></th>
+                    <th>Description <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByDescription()"></th>
+                    <th>Status <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStatus()"></th>
+                    <th>Open for voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStartDate()"></th>
                 </tr>
             </thead>
             <tbody>
@@ -81,6 +81,50 @@ export default class Votings extends Vue {
 
     formatDates(startTime: Date | null, endTime: Date | null): string {
         return moment(startTime).format('DD.MM.YYYY HH:mm') + " - " + moment(endTime).format('DD.MM.YYYY HH:mm');
+    }
+
+    private titleSort = 1;
+
+    sortByTitle(): void {
+        if (this.titleSort === 1) {
+            this.votings.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+        } else {
+            this.votings.sort((a, b) => b.title.toLowerCase().localeCompare(a.title.toLowerCase()));
+        }
+        this.titleSort *= -1;
+    }
+
+    private descriptionSort = 1;
+
+    sortByDescription(): void {
+        if (this.descriptionSort === 1) {
+            this.votings.sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase()));
+        } else {
+            this.votings.sort((a, b) => b.description.toLowerCase().localeCompare(a.description.toLowerCase()));
+        }
+        this.descriptionSort *= -1;
+    }
+
+    private statusSort = 1;
+
+    sortByStatus(): void {
+        if (this.statusSort === 1) {
+            this.votings.sort((a, b) => a.votingStatus.toLowerCase().localeCompare(b.votingStatus.toLowerCase()));
+        } else {
+            this.votings.sort((a, b) => b.votingStatus.toLowerCase().localeCompare(a.votingStatus.toLowerCase()));
+        }
+        this.statusSort *= -1;
+    }
+
+    private datesSort = 1;
+
+    sortByStartDate(): void {
+        if (this.datesSort === 1) {
+            this.votings.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+        } else {
+            this.votings.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+        }
+        this.datesSort *= -1;
     }
 
     mounted(): void {

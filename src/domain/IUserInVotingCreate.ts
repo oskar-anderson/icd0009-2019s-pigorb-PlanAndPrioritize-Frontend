@@ -1,4 +1,4 @@
-export interface IAppUserRemoveFromVoting {
+export interface IUserInVotingCreate {
     appUserId: string;
     votingId: string;
 }
