@@ -21,21 +21,45 @@
                 </h5>
             </div>
             <div class="card-body">
-                <p>Status: {{voting.votingStatus}}</p>
-                <p>Open for voting: {{formatDates(voting.startTime, voting.endTime)}}</p>
-                <p>Description: {{voting.description}}</p>
+                <div class="row">
+                    <div class="column1">
+                        <p>Status </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{voting.votingStatus}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Open for voting </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{formatDates(voting.startTime, voting.endTime)}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Description </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{voting.description}}</p>
+                    </div>
+                </div>
             </div>
 
+        <hr>
+        <div class="title">Tasks added to voting</div>
         <table class="table table-striped">
             <thead>
-                <tr>
+                <tr v-if="hasFeatures() === true">
                     <th>Task</th>
                     <th>Category</th>
                     <th>Description</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="feature in features" :key="feature.id">
+                <tr v-for="feature in featuresForVoting" :key="feature.id">
                     <td>
                          <router-link :to="{name: 'TaskDetails', params: { id: feature.id }}">
                             {{feature.title}}
@@ -45,12 +69,30 @@
                     <td>{{feature.description}}</td>
                     <td>
                         <div>
-                            <img src="../../assets/icons/delete_icon.png" height="20" alt="delete-icon" @click="ConfirmRemoveFeature(feature)">
+                            <img v-if="isAdmin === true" src="../../assets/icons/delete_icon.png" height="20" style="float: right; margin-right: 15px;" alt="delete-icon" @click="ConfirmRemoveFeature(feature)">
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div v-if="isAdmin === true">
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="margin-left: 10px;" @click="displayFeatureSelection()">Add task</button>
+        </div>
+        <br>
+        <div class="row" v-if="chooseTask === true && isAdmin === true">
+            <div class="col-md-6">
+                <div class="form-group" style="margin-left: 10px;">
+                    <label class="control-label">Choose task</label>
+                    <select class="form-control" v-model="featureInVoting.featureId">
+                        <option v-for="feature in toDoFeaturesNotInVoting" :key="feature.id" v-bind:value="feature.id">{{feature.title}}</option>
+                    </select>
+                    <br>
+                    <button type="submit" class="btn btn-outline-success my-2 my-sm-0" @click="addFeatureToVoting()">Add</button>
+                    <br><br>
+                </div>
+            </div>
+        </div>
+        <br>
 
         <table class="table">
             <thead>
@@ -60,17 +102,34 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in users" :key="user.id">
+                <tr v-for="user in usersForVoting" :key="user.id">
                     <td>{{formatUser(user)}}</td>
                     <td>
                         <div>
-                            <img src="../../assets/icons/delete_icon.png" style="float: right; margin-right: 15px;" height="20" alt="delete-icon" @click="ConfirmRemoveUser(user)">
+                            <img v-if="isAdmin === true" src="../../assets/icons/delete_icon.png" style="float: right; margin-right: 15px;" height="20" alt="delete-icon" @click="ConfirmRemoveUser(user)">
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-            <div class="card-footer text-muted"></div>
+        <div v-if="isAdmin === true">
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="margin-left: 10px;" @click="displayUserSelection()">Add user</button>
+        </div>
+        <br>
+        <div class="row" v-if="chooseUser === true && isAdmin === true">
+            <div class="col-md-6">
+                <div class="form-group" style="margin-left: 10px;">
+                    <label class="control-label">Choose user</label>
+                    <select class="form-control" v-model="userInVoting.appUserId">
+                        <option v-for="user in usersNotInVoting" :key="user.id" v-bind:value="user.id">{{formatUser(user)}}</option>
+                    </select>
+                    <br>
+                    <button type="submit" class="btn btn-outline-success my-2 my-sm-0" @click="addUserToVoting()">Add</button>
+                    <br><br>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted"></div>
         </div>
         </div>
     </div>
@@ -104,22 +163,38 @@ export default class TaskDetails extends Vue {
         return store.state.voting;
     }
 
-    get features(): IFeature[] {
+    get featuresForVoting(): IFeature[] {
         return store.state.featuresForVoting;
     }
 
-    get users(): IAppUser[] {
+    get toDoFeaturesNotInVoting(): IFeature[] {
+        return store.state.toDoFeaturesNotInVoting;
+    }
+
+    get usersForVoting(): IAppUser[] {
         return store.state.usersForVoting;
     }
 
-    private removeFeature: IFeatureInVotingCreate = {
+    get usersNotInVoting(): IAppUser[] {
+        return store.state.usersNotInVoting;
+    }
+
+    private chooseTask = false;
+
+    private chooseUser = false;
+
+    private featureInVoting: IFeatureInVotingCreate = {
         featureId: "",
         votingId: this.id
     }
 
-    private removeUser: IUserInVotingCreate = {
+    private userInVoting: IUserInVotingCreate = {
         appUserId: "",
         votingId: this.id
+    }
+
+    hasFeatures(): boolean {
+        return this.featuresForVoting.length > 0;
     }
 
     ConfirmDelete(feature: IFeature): void {
@@ -140,11 +215,8 @@ export default class TaskDetails extends Vue {
     }
 
     async RemoveFeatureFromVoting(featureId: string): Promise<void> {
-        this.removeFeature.featureId = featureId;
-        const response = await store.dispatch("removeFeatureFromVoting", this.removeFeature);
-        if (response === true) {
-            location.reload();
-        }
+        this.featureInVoting.featureId = featureId;
+        store.dispatch("removeFeatureFromVoting", this.featureInVoting);
     }
 
     ConfirmRemoveUser(user: IAppUser): void {
@@ -154,11 +226,8 @@ export default class TaskDetails extends Vue {
     }
 
     async RemoveUserFromVoting(userId: string): Promise<void> {
-        this.removeUser.appUserId = userId;
-        const response = await store.dispatch("removeUserFromVoting", this.removeUser);
-        if (response === true) {
-            location.reload();
-        }
+        this.userInVoting.appUserId = userId;
+        store.dispatch("removeUserFromVoting", this.userInVoting);
     }
 
     formatDates(startTime: Date | null, endTime: Date | null): string {
@@ -169,10 +238,38 @@ export default class TaskDetails extends Vue {
         return user.firstName + " " + user.lastName + " (" + user.email + ")";
     }
 
+    displayFeatureSelection(): void {
+        this.chooseTask = true;
+    }
+
+    async addFeatureToVoting(): Promise<void> {
+        const result = await store.dispatch("addFeatureToVoting", this.featureInVoting);
+        if (result === true) {
+            store.dispatch("getFeaturesForVoting", this.id);
+            store.dispatch("getToDoFeaturesNotInVoting", this.id);
+            this.chooseTask = false;
+        }
+    }
+
+    displayUserSelection(): void {
+        this.chooseUser = true;
+    }
+
+    async addUserToVoting(): Promise<void> {
+        const result = await store.dispatch("addUserToVoting", this.userInVoting);
+        if (result === true) {
+            store.dispatch("getUsersForVoting", this.id);
+            store.dispatch("getUsersNotInVoting", this.id);
+            this.chooseUser = false;
+        }
+    }
+
     mounted(): void {
         store.dispatch("getVoting", this.id);
         store.dispatch("getFeaturesForVoting", this.id);
+        store.dispatch("getToDoFeaturesNotInVoting", this.id);
         store.dispatch("getUsersForVoting", this.id);
+        store.dispatch("getUsersNotInVoting", this.id);
     }
 }
 </script>

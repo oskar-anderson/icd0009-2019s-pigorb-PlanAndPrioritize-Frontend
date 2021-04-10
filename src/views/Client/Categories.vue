@@ -41,7 +41,7 @@
                             </span>
                             &nbsp;
                             <span>
-                                <img src="../../assets/icons/delete_icon.png" height="20" alt="delete-icon" @click="ConfirmDelete(category)">
+                                <img v-if="isAdmin === true" src="../../assets/icons/delete_icon.png" height="20" alt="delete-icon" @click="ConfirmDelete(category)">
                             </span>
                         </div>
                     </td>
@@ -61,6 +61,10 @@ import store from "./../../store";
 export default class Categories extends Vue {
     get isAuthenticated(): boolean {
         return store.getters.isAuthenticated;
+    }
+
+    get isAdmin(): boolean {
+        return store.getters.isAdmin;
     }
 
     get categories(): ICategory[] {

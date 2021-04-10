@@ -202,7 +202,6 @@ export default class TaskList extends Vue {
 
     mounted(): void {
         store.dispatch("getFeatures");
-        this.sortByCreationTime();
     }
 }
 </script>

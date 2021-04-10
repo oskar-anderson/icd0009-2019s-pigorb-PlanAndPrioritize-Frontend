@@ -21,11 +21,12 @@ import CategoryEdit from '../views/Client/CategoryEdit.vue'
 import Votings from '../views/Client/Votings.vue'
 import VotingCreate from '../views/Client/VotingCreate.vue'
 import VotingDetails from '../views/Client/VotingDetails.vue'
+import VotingEdit from '../views/Client/VotingEdit.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-    { path: '/', name: 'TaskList', component: TaskList },
+    { path: '/', name: 'TaskList', component: TaskList, props: true },
     { path: '/create-task', name: 'TaskCreate', component: TaskCreate },
     { path: '/edit-task/:id?', name: 'TaskEdit', component: TaskEdit, props: true },
     { path: '/task/:id?', name: 'TaskDetails', component: TaskDetails, props: true },
@@ -41,6 +42,7 @@ const routes: Array<RouteConfig> = [
     { path: '/votings', name: 'Votings', component: Votings },
     { path: '/create-voting', name: 'VotingCreate', component: VotingCreate },
     { path: '/voting/:id?', name: 'VotingDetails', component: VotingDetails, props: true },
+    { path: '/edit-voting/:id?', name: 'VotingEdit', component: VotingEdit, props: true },
 
     { path: '/login', name: 'AccountLogin', component: AccountLogin },
     { path: '/usermanager', name: 'UserManagerIndex', component: UserManagerIndex },

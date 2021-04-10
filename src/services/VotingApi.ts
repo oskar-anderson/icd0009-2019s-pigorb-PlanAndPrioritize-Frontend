@@ -3,6 +3,7 @@ import { IVoting } from '@/domain/IVoting';
 import { IVotingCreate } from '@/domain/IVotingCreate';
 import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
 import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
+import { IVotingEdit } from '@/domain/IVotingEdit';
 
 interface IResponse {
     status: string;
@@ -38,6 +39,24 @@ export abstract class VotingApi {
         }
     }
 
+    static async getAssignedVotings(jwt: string): Promise<IVoting[]> {
+        const url = 'GetAssignedVotings';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IVoting[]>(url, auth);
+            console.log('getAssignedVotings response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
     static async getActiveVotings(jwt: string): Promise<IVoting[]> {
         const url = 'GetActiveVotings';
         const auth = {
@@ -56,7 +75,25 @@ export abstract class VotingApi {
         }
     }
 
-    static async getVoting(jwt: string, id: string): Promise<IVoting | null> {
+    static async getActiveVotingsNotAddedToFeature(id: string, jwt: string): Promise<IVoting[]> {
+        const url = 'GetActiveVotingsNotInFeature/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IVoting[]>(url, auth);
+            console.log('GetActiveVotingsNotInFeature response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
+    static async getVoting(id: string, jwt: string): Promise<IVoting | null> {
         const url = 'GetVoting/' + id;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
@@ -64,6 +101,24 @@ export abstract class VotingApi {
         try {
             const response = await this.axios.get<IVoting>(url, auth);
             console.log('getVoting response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return null;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return null;
+        }
+    }
+
+    static async getVotingEdit(id: string, jwt: string): Promise<IVotingEdit | null> {
+        const url = 'GetVotingEdit/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IVotingEdit>(url, auth);
+            console.log('GetVotingEdit response', response);
             if (response.status === 200) {
                 return response.data;
             }
@@ -109,15 +164,15 @@ export abstract class VotingApi {
         }
     }
 
-    static async editVoting(id: string, Voting: IVoting, jwt: string): Promise<boolean> {
+    static async editVoting(id: string, Voting: IVotingEdit, jwt: string): Promise<boolean> {
         const url = 'EditVoting/' + id;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
         try {
-            const response = await this.axios.put<IVoting>(url, Voting, auth);
+            const response = await this.axios.put<IVotingEdit>(url, Voting, auth);
             console.log('EditVoting response', response);
-            if (response.status === 200) {
+            if (response.status === 204) {
                 return true;
             }
             return false;
@@ -189,6 +244,24 @@ export abstract class VotingApi {
         try {
             const response = await this.axios.post<IFeatureInVotingCreate>(url, featureInVoting, auth);
             console.log('AddFeatureToVoting response', response);
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
+
+    static async addUserToVoting(userInVoting: IUserInVotingCreate, jwt: string): Promise<boolean> {
+        const url = 'AddUserToVoting';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.post<IUserInVotingCreate>(url, userInVoting, auth);
+            console.log('AddUserToVoting response', response);
             if (response.status === 200) {
                 return true;
             }

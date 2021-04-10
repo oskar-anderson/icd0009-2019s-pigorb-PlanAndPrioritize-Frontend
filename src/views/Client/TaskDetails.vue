@@ -18,8 +18,7 @@
                             <img src="../../assets/icons/edit_icon.png" height="20" style="float: right; margin-right: 15px;" alt="edit-icon">
                         </router-link>
                     </span>
-                     <span class="clickable" @click="displayVotingSelection()">+ Add to voting
-                    </span>
+                     <span v-if="isAdmin === true" class="clickable" @click="displayVotingSelection()">+ Add to voting</span>
                 </h5>
             </div>
             <div class="card-body">
@@ -40,15 +39,78 @@
 
                 <p class="bold">Description</p>
                 <hr>
-                <p>Category: {{feature.categoryName}}</p>
-                <p>Priority value: {{checkValue(feature.priorityValue)}}</p>
-                <p>Assignee: {{feature.assignee}}</p>
-                <p>Status: {{feature.featureStatus}}</p>
-                <p>Size: {{checkValue(feature.size)}}</p>
-                <p>Start date: {{formatDate(feature.startTime)}}</p>
-                <p>End date: {{formatDate(feature.endTime)}}</p>
-                <p>Duration: {{checkValue(feature.duration)}} {{days(feature.duration)}}</p>
-                <p>Description: {{feature.description}}</p>
+                <div class="row">
+                    <div class="column1">
+                        <p>Category </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{feature.categoryName}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Priority value </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{checkValue(feature.priorityValue)}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Assignee </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{feature.assignee}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Status </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{feature.featureStatus}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Size </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{checkValue(feature.size)}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Start date </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{formatDate(feature.startTime)}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>End date </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{formatDate(feature.endTime)}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Duration </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{checkValue(feature.duration)}} {{days(feature.duration)}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column1">
+                        <p>Description </p>
+                    </div>
+                    <div class="column2">
+                        <p>{{feature.description}}</p>
+                    </div>
+                </div>
                 <br>
                 <p class="bold">Priority votings</p>
                 <hr>
@@ -196,7 +258,9 @@ export default class TaskDetails extends Vue {
     async addToVoting(): Promise<void> {
         const result = await store.dispatch("addFeatureToVoting", this.featureInVoting);
         if (result === true) {
-            location.reload();
+            await store.dispatch("getVotingsForFeature", this.id);
+            store.dispatch("getActiveVotingsNotAddedToFeature", this.id);
+            this.chooseVoting = false;
         }
     }
 
@@ -204,7 +268,7 @@ export default class TaskDetails extends Vue {
         store.dispatch("getFeature", this.id);
         store.dispatch("getComments", this.id);
         store.dispatch("getVotingsForFeature", this.id);
-        store.dispatch("getActiveVotings");
+        store.dispatch("getActiveVotingsNotAddedToFeature", this.id);
     }
 }
 </script>

@@ -30,11 +30,14 @@ import { IAppUser } from '@/domain/IAppUser';
 import { UserApi } from '@/services/UserApi';
 import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
 import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
+import { IVotingEdit } from '@/domain/IVotingEdit';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        search: "",
+
         users: [] as IUser[],
         roles: [] as IRole[],
         role: null as IRole | null,
@@ -43,6 +46,7 @@ export default new Vuex.Store({
         feature: null as IFeature | null,
         featurePlain: null as IFeatureEdit | null,
         features: [] as IFeature[],
+        toDoFeatures: [] as IFeature[],
         featureStates: [] as IFeatureState[],
 
         category: null as ICategoryEdit | null,
@@ -52,10 +56,13 @@ export default new Vuex.Store({
         comments: [] as IComment[],
 
         voting: null as IVoting | null,
+        votingEdit: null as IVotingEdit | null,
         votings: [] as IVoting[],
         activeVotings: [] as IVoting[],
         featuresForVoting: [] as IFeature[],
-        usersForVoting: [] as IAppUser[]
+        toDoFeaturesNotInVoting: [] as IFeature[],
+        usersForVoting: [] as IAppUser[],
+        usersNotInVoting: [] as IAppUser[]
     },
 
     mutations: {
@@ -81,6 +88,9 @@ export default new Vuex.Store({
 
         setFeatures(state, features: IFeature[]) {
             state.features = features;
+        },
+        setToDoFeatures(state, features: IFeature[]) {
+            state.toDoFeatures = features;
         },
         setFeature(state, feature: IFeature) {
             state.feature = feature;
@@ -115,11 +125,23 @@ export default new Vuex.Store({
         setVoting(state, voting: IVoting) {
             state.voting = voting;
         },
+        setVotingEdit(state, voting: IVotingEdit) {
+            state.votingEdit = voting;
+        },
         setFeaturesForVoting(state, features: IFeature[]) {
             state.featuresForVoting = features;
         },
+        setToDoFeaturesNotInVoting(state, features: IFeature[]) {
+            state.toDoFeaturesNotInVoting = features;
+        },
         setUsersForVoting(state, users: IAppUser[]) {
             state.usersForVoting = users;
+        },
+        setUsersNotInVoting(state, users: IAppUser[]) {
+            state.usersNotInVoting = users;
+        },
+        setSearch(state, search: string) {
+            state.search = search;
         }
     },
 
@@ -157,6 +179,9 @@ export default new Vuex.Store({
     },
 
     actions: {
+        setSearch(context, search: string) {
+            context.commit('setSearch', search);
+        },
         clearJwt(context): void {
             context.commit('setJwt', null);
             context.commit('setRequirePasswordChange', false);
@@ -230,8 +255,12 @@ export default new Vuex.Store({
         },
 
         async getFeatures(context): Promise<void> {
-            const features = await FeatureApi.getAllFeatures(context.getters.jwt);
+            const features = await FeatureApi.getAllFeatures(this.state.search, context.getters.jwt);
             context.commit('setFeatures', features);
+        },
+        async getToDoFeatures(context): Promise<void> {
+            const features = await FeatureApi.getToDoFeatures(context.getters.jwt);
+            context.commit('setToDoFeatures', features);
         },
         async getFeature(context, id: string): Promise<void> {
             const feature = await FeatureApi.getFeature(context.getters.jwt, id);
@@ -251,7 +280,7 @@ export default new Vuex.Store({
         async deleteFeature(context, featureId: string): Promise<void> {
             if (context.getters.isAdmin && context.getters.jwt) {
                 await FeatureApi.deleteFeature(featureId, context.getters.jwt);
-                const features = await FeatureApi.getAllFeatures(context.getters.jwt);
+                const features = await FeatureApi.getAllFeatures(this.state.search, context.getters.jwt);
                 context.commit('setFeatures', features);
             }
         },
@@ -313,13 +342,25 @@ export default new Vuex.Store({
             const votings = await VotingApi.getAllVotings(context.getters.jwt);
             context.commit('setVotings', votings);
         },
+        async getAssignedVotings(context): Promise<void> {
+            const votings = await VotingApi.getAssignedVotings(context.getters.jwt);
+            context.commit('setVotings', votings);
+        },
         async getActiveVotings(context): Promise<void> {
             const votings = await VotingApi.getActiveVotings(context.getters.jwt);
             context.commit('setActiveVotings', votings);
         },
+        async getActiveVotingsNotAddedToFeature(context, featureId: string): Promise<void> {
+            const votings = await VotingApi.getActiveVotingsNotAddedToFeature(featureId, context.getters.jwt);
+            context.commit('setActiveVotings', votings);
+        },
         async getVoting(context, id: string): Promise<void> {
-            const voting = await VotingApi.getVoting(context.getters.jwt, id);
+            const voting = await VotingApi.getVoting(id, context.getters.jwt);
             context.commit('setVoting', voting);
+        },
+        async getVotingEdit(context, id: string): Promise<void> {
+            const voting = await VotingApi.getVotingEdit(id, context.getters.jwt);
+            context.commit('setVotingEdit', voting);
         },
         async createVoting(context, voting: IVotingCreate): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
@@ -334,7 +375,7 @@ export default new Vuex.Store({
                 context.commit('setVotings', votings);
             }
         },
-        async editVoting(context, voting: IVoting): Promise<boolean> {
+        async editVoting(context, voting: IVotingEdit): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 const result = await VotingApi.editVoting(voting.id, voting, context.getters.jwt);
                 return result;
@@ -345,9 +386,17 @@ export default new Vuex.Store({
             const features = await FeatureApi.getFeaturesForVoting(context.getters.jwt, votingId);
             context.commit('setFeaturesForVoting', features);
         },
+        async getToDoFeaturesNotInVoting(context, votingId: string): Promise<void> {
+            const features = await FeatureApi.getToDoFeaturesNotInVoting(context.getters.jwt, votingId);
+            context.commit('setToDoFeaturesNotInVoting', features);
+        },
         async getUsersForVoting(context, votingId: string): Promise<void> {
             const users = await UserApi.getUsersForVoting(context.getters.jwt, votingId);
             context.commit('setUsersForVoting', users);
+        },
+        async getUsersNotInVoting(context, votingId: string): Promise<void> {
+            const users = await UserApi.getUsersNotInVoting(context.getters.jwt, votingId);
+            context.commit('setUsersNotInVoting', users);
         },
         async getVotingsForFeature(context, featureId: string): Promise<void> {
             const votings = await VotingApi.getVotingsForFeature(featureId, context.getters.jwt);
@@ -355,17 +404,27 @@ export default new Vuex.Store({
         },
         async removeFeatureFromVoting(context, featureRemove: IFeatureInVotingCreate): Promise<void> {
             await VotingApi.removeFeatureFromVoting(featureRemove, context.getters.jwt);
-            const features = await FeatureApi.getFeaturesForVoting(context.getters.jwt, featureRemove.votingId);
-            context.commit('setFeaturesForVoting', features);
+            const featuresIn = await FeatureApi.getFeaturesForVoting(context.getters.jwt, featureRemove.votingId);
+            const featuresNotIn = await FeatureApi.getToDoFeaturesNotInVoting(context.getters.jwt, featureRemove.votingId);
+            context.commit('setFeaturesForVoting', featuresIn);
+            context.commit('setToDoFeaturesNotInVoting', featuresNotIn);
         },
         async removeUserFromVoting(context, userRemove: IUserInVotingCreate): Promise<void> {
             await VotingApi.removeUserFromVoting(userRemove, context.getters.jwt);
-            const users = await UserApi.getUsersForVoting(context.getters.jwt, userRemove.votingId);
-            context.commit('setUsersForVoting', users);
+            const usersIn = await UserApi.getUsersForVoting(context.getters.jwt, userRemove.votingId);
+            const usersNotIn = await UserApi.getUsersNotInVoting(context.getters.jwt, userRemove.votingId);
+            context.commit('setUsersForVoting', usersIn);
+            context.commit('setUsersNotInVoting', usersNotIn);
         },
         async addFeatureToVoting(context, featureInVoting: IFeatureInVotingCreate): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 return await VotingApi.addFeatureToVoting(featureInVoting, context.getters.jwt);
+            }
+            return false;
+        },
+        async addUserToVoting(context, userInVoting: IUserInVotingCreate): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                return await VotingApi.addUserToVoting(userInVoting, context.getters.jwt);
             }
             return false;
         }

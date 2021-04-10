@@ -34,4 +34,22 @@ export abstract class UserApi {
             return [];
         }
     }
+
+    static async getUsersNotInVoting(jwt: string, id: string): Promise<IAppUser[]> {
+        const url = 'GetUsersNotInVoting/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IAppUser[]>(url, auth);
+            console.log('GetUsersNotInVoting response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
 }

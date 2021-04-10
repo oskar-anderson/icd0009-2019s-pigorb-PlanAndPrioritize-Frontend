@@ -62,7 +62,7 @@ import moment from "moment";
 @Component
 export default class Votings extends Vue {
     get isAdmin(): boolean {
-        return store.getters.isAuthenticated;
+        return store.getters.isAdmin;
     }
 
     get votings(): IVoting[] {

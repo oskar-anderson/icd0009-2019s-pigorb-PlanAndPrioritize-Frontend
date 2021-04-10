@@ -63,3 +63,23 @@
   margin-right: 30px;
   font-size: large;
 }
+
+.title {
+  font-weight: bold;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.row {
+  padding-left: 15px;
+}
+
+.column1 {
+  float: left;
+  width: 15%;
+}
+
+.column2 {
+  float: left;
+  width: 85%;
+}

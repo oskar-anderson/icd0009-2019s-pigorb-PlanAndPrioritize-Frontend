@@ -20,14 +20,32 @@ export abstract class FeatureApi {
         }
     )
 
-    static async getAllFeatures(jwt: string): Promise<IFeature[]> {
-        const url = 'GetFeaturesForList';
+    static async getAllFeatures(search: string, jwt: string): Promise<IFeature[]> {
+        const url = 'GetFeaturesForList/' + search;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
         try {
             const response = await this.axios.get<IFeature[]>(url, auth);
             console.log('getAllFeatures response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
+    static async getToDoFeatures(jwt: string): Promise<IFeature[]> {
+        const url = 'GetToDoFeatures';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeature[]>(url, auth);
+            console.log('GetToDoFeatures response', response);
             if (response.status === 200) {
                 return response.data;
             }
@@ -153,6 +171,24 @@ export abstract class FeatureApi {
         try {
             const response = await this.axios.get<IFeature[]>(url, auth);
             console.log('getFeaturesForVoting response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
+    static async getToDoFeaturesNotInVoting(jwt: string, id: string): Promise<IFeature[]> {
+        const url = 'GetFeaturesNotInVoting/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeature[]>(url, auth);
+            console.log('GetFeaturesNotInVoting response', response);
             if (response.status === 200) {
                 return response.data;
             }
