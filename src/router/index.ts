@@ -18,10 +18,12 @@ import AssignedVotings from '../views/Client/AssignedVotings.vue'
 import Categories from '../views/Client/Categories.vue'
 import CategoryCreate from '../views/Client/CategoryCreate.vue'
 import CategoryEdit from '../views/Client/CategoryEdit.vue'
+
 import Votings from '../views/Client/Votings.vue'
 import VotingCreate from '../views/Client/VotingCreate.vue'
 import VotingDetails from '../views/Client/VotingDetails.vue'
 import VotingEdit from '../views/Client/VotingEdit.vue'
+import Vote from '../views/Client/Vote.vue'
 
 Vue.use(VueRouter)
 
@@ -43,6 +45,7 @@ const routes: Array<RouteConfig> = [
     { path: '/create-voting', name: 'VotingCreate', component: VotingCreate },
     { path: '/voting/:id?', name: 'VotingDetails', component: VotingDetails, props: true },
     { path: '/edit-voting/:id?', name: 'VotingEdit', component: VotingEdit, props: true },
+    { path: '/vote/:id?', name: 'Vote', component: Vote, props: true },
 
     { path: '/login', name: 'AccountLogin', component: AccountLogin },
     { path: '/usermanager', name: 'UserManagerIndex', component: UserManagerIndex },

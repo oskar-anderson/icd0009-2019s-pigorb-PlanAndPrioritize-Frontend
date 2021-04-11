@@ -28,6 +28,7 @@
                     <th>Priority <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByPriority()"></th>
                     <th>Status <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStatus()"></th>
                     <th>Dates <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStartDate()"></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>

@@ -4,6 +4,7 @@ import { IVotingCreate } from '@/domain/IVotingCreate';
 import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
 import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
 import { IVotingEdit } from '@/domain/IVotingEdit';
+import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 
 interface IResponse {
     status: string;
@@ -262,6 +263,34 @@ export abstract class VotingApi {
         try {
             const response = await this.axios.post<IUserInVotingCreate>(url, userInVoting, auth);
             console.log('AddUserToVoting response', response);
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
+
+    static async vote(featuresWithPriority: IFeatureWithPriority[], jwt: string): Promise<boolean> {
+        console.log("***** VOTE *****");
+        for (const feature of featuresWithPriority) {
+            console.log("Title: " + feature.title);
+            console.log("Size: " + feature.taskSize);
+            console.log("Business: " + feature.businessValue);
+            console.log("Time: " + feature.timeCriticality);
+            console.log("Risk: " + feature.riskOrOpportunity);
+            console.log("*****");
+        }
+
+        const url = 'Vote';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.post<IFeatureWithPriority[]>(url, featuresWithPriority, auth);
+            console.log('Vote response', response);
             if (response.status === 200) {
                 return true;
             }

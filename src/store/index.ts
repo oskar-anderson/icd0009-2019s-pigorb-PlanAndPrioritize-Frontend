@@ -31,6 +31,7 @@ import { UserApi } from '@/services/UserApi';
 import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
 import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
 import { IVotingEdit } from '@/domain/IVotingEdit';
+import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 
 Vue.use(Vuex)
 
@@ -48,6 +49,7 @@ export default new Vuex.Store({
         features: [] as IFeature[],
         toDoFeatures: [] as IFeature[],
         featureStates: [] as IFeatureState[],
+        featuresWithPriority: [] as IFeatureWithPriority[],
 
         category: null as ICategoryEdit | null,
         categories: [] as ICategory[],
@@ -91,6 +93,9 @@ export default new Vuex.Store({
         },
         setToDoFeatures(state, features: IFeature[]) {
             state.toDoFeatures = features;
+        },
+        setFeaturesWithPriority(state, features: IFeatureWithPriority[]) {
+            state.featuresWithPriority = features;
         },
         setFeature(state, feature: IFeature) {
             state.feature = feature;
@@ -386,6 +391,10 @@ export default new Vuex.Store({
             const features = await FeatureApi.getFeaturesForVoting(context.getters.jwt, votingId);
             context.commit('setFeaturesForVoting', features);
         },
+        async getFeaturesWithPriorityTemplate(context, votingId: string): Promise<void> {
+            const features = await FeatureApi.getFeaturesWithPriorityTemplate(context.getters.jwt, votingId);
+            context.commit('setFeaturesWithPriority', features);
+        },
         async getToDoFeaturesNotInVoting(context, votingId: string): Promise<void> {
             const features = await FeatureApi.getToDoFeaturesNotInVoting(context.getters.jwt, votingId);
             context.commit('setToDoFeaturesNotInVoting', features);
@@ -425,6 +434,12 @@ export default new Vuex.Store({
         async addUserToVoting(context, userInVoting: IUserInVotingCreate): Promise<boolean> {
             if (context.getters.isAuthenticated && context.getters.jwt) {
                 return await VotingApi.addUserToVoting(userInVoting, context.getters.jwt);
+            }
+            return false;
+        },
+        async vote(context, featuresWithPriority: IFeatureWithPriority[]): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                return await VotingApi.vote(featuresWithPriority, context.getters.jwt);
             }
             return false;
         }

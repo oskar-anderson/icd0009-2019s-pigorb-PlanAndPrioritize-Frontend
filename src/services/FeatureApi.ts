@@ -3,6 +3,7 @@ import { IFeature } from '@/domain/IFEature';
 import { IFeatureCreate } from '@/domain/IFeatureCreate';
 import { IFeatureEdit } from '@/domain/IFeatureEdit';
 import { IFeatureState } from '@/domain/IFeatureState';
+import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 
 interface IResponse {
     status: string;
@@ -171,6 +172,24 @@ export abstract class FeatureApi {
         try {
             const response = await this.axios.get<IFeature[]>(url, auth);
             console.log('getFeaturesForVoting response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
+    static async getFeaturesWithPriorityTemplate(jwt: string, id: string): Promise<IFeatureWithPriority[]> {
+        const url = 'GetFeaturesWithPriority/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeatureWithPriority[]>(url, auth);
+            console.log('getFeaturesWithPriorityTemplate response', response);
             if (response.status === 200) {
                 return response.data;
             }

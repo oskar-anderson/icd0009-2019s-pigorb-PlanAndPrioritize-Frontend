@@ -23,6 +23,7 @@
                     <th>Number of tasks</th>
                     <th>In progress</th>
                     <th>Closed</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>

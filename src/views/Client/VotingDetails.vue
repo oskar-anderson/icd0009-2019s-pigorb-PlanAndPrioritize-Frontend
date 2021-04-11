@@ -11,11 +11,16 @@
             <div class="card-header">
                 <h5>{{voting.title}}
                     <span v-if="isAdmin === true">
-                        <img src="../../assets/icons/delete_icon.png" height="20" style="float: right;" alt="delete-icon" @click="ConfirmDelete(voting)">
+                        <img src="../../assets/icons/delete_icon.png" height="20" style="float: right; margin-top: 7px;" alt="delete-icon" @click="ConfirmDelete(voting)">
                     </span>
                     <span v-if="isAdmin === true">
                         <router-link :to="{name: 'VotingEdit', params: { id: voting.id }}">
-                            <img src="../../assets/icons/edit_icon.png" height="20" style="float: right; margin-right: 15px;" alt="edit-icon">
+                            <img src="../../assets/icons/edit_icon.png" height="20" style="float: right; margin-right: 15px; margin-top: 7px;" alt="edit-icon">
+                        </router-link>
+                    </span>
+                    <span v-if="isOpen() === true">
+                        <router-link :to="{name: 'Vote', params: { id: voting.id }}">
+                            <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="float: right; margin-right: 15px;">Start voting</button>
                         </router-link>
                     </span>
                 </h5>
@@ -253,6 +258,10 @@ export default class TaskDetails extends Vue {
 
     displayUserSelection(): void {
         this.chooseUser = true;
+    }
+
+    isOpen(): boolean {
+        return this.voting?.votingStatus === "Open";
     }
 
     async addUserToVoting(): Promise<void> {
