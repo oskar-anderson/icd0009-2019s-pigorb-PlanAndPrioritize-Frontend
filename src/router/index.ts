@@ -24,6 +24,7 @@ import VotingCreate from '../views/Client/VotingCreate.vue'
 import VotingDetails from '../views/Client/VotingDetails.vue'
 import VotingEdit from '../views/Client/VotingEdit.vue'
 import Vote from '../views/Client/Vote.vue'
+import TaskPriorityHistory from '../views/Client/TaskPriorityHistory.vue'
 
 Vue.use(VueRouter)
 
@@ -32,6 +33,7 @@ const routes: Array<RouteConfig> = [
     { path: '/create-task', name: 'TaskCreate', component: TaskCreate },
     { path: '/edit-task/:id?', name: 'TaskEdit', component: TaskEdit, props: true },
     { path: '/task/:id?', name: 'TaskDetails', component: TaskDetails, props: true },
+    { path: '/task-priorities/:id?', name: 'TaskPriorityHistory', component: TaskPriorityHistory, props: true },
 
     { path: '/roadmap', name: 'Roadmap', component: Roadmap },
 

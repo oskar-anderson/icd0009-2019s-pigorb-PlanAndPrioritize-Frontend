@@ -20,9 +20,9 @@
                 <tr>
                     <th>Category</th>
                     <th>Description</th>
-                    <th>Number of tasks</th>
-                    <th>In progress</th>
-                    <th>Closed</th>
+                    <th style="text-align:center">Number of tasks</th>
+                    <th style="text-align:center">In progress</th>
+                    <th style="text-align:center">Closed</th>
                     <th></th>
                 </tr>
             </thead>

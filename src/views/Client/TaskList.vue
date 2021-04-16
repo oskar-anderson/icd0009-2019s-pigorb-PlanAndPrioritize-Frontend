@@ -23,9 +23,9 @@
                 <tr>
                     <th>Task <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByTitle()"></th>
                     <th>Category <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByCategory()"></th>
-                    <th>Size <img src="../../assets/icons/sort_icon.png" height="12" alt="sort-icon" @click="sortBySize()"></th>
+                    <th style="text-align:center">Size <img src="../../assets/icons/sort_icon.png" height="12" alt="sort-icon" @click="sortBySize()"></th>
                     <th>Assignee <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByAssignee()"></th>
-                    <th>Priority <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByPriority()"></th>
+                    <th style="text-align:center">Priority <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByPriority()"></th>
                     <th>Status <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStatus()"></th>
                     <th>Dates <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStartDate()"></th>
                     <th></th>

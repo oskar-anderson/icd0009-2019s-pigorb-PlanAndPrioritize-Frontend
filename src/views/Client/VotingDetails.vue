@@ -74,7 +74,12 @@
                     <td>{{feature.description}}</td>
                     <td>
                         <div>
-                            <img v-if="isAdmin === true" src="../../assets/icons/delete_icon.png" height="20" style="float: right; margin-right: 15px;" alt="delete-icon" @click="ConfirmRemoveFeature(feature)">
+                            <img v-if="isAdmin === true" src="../../assets/icons/delete_icon.png" height="20" style="float: right; margin-right: 10px;" alt="delete-icon" @click="ConfirmRemoveFeature(feature)">
+                        </div>
+                        <div v-if="voting.votingStatus === 'Closed'">
+                            <router-link :to="{name: 'TaskPriorityHistory', params: { id: feature.id, votingId: id }}">
+                                <img src="../../assets/icons/history_icon.png" height="20" style="float: right; margin-right: 15px;" alt="history-icon">
+                            </router-link>
                         </div>
                     </td>
                 </tr>

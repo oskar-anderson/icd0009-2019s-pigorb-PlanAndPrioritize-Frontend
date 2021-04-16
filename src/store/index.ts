@@ -32,6 +32,7 @@ import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
 import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
 import { IVotingEdit } from '@/domain/IVotingEdit';
 import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
+import { IUsersFeaturePriority } from '@/domain/IUsersFeaturePriority';
 
 Vue.use(Vuex)
 
@@ -64,7 +65,9 @@ export default new Vuex.Store({
         featuresForVoting: [] as IFeature[],
         toDoFeaturesNotInVoting: [] as IFeature[],
         usersForVoting: [] as IAppUser[],
-        usersNotInVoting: [] as IAppUser[]
+        usersNotInVoting: [] as IAppUser[],
+
+        userFeaturePriorities: [] as IUsersFeaturePriority[]
     },
 
     mutations: {
@@ -147,6 +150,9 @@ export default new Vuex.Store({
         },
         setSearch(state, search: string) {
             state.search = search;
+        },
+        setUserPriorities(state, priorities: IUsersFeaturePriority[]) {
+            state.userFeaturePriorities = priorities;
         }
     },
 
@@ -442,6 +448,10 @@ export default new Vuex.Store({
                 return await VotingApi.vote(featuresWithPriority, context.getters.jwt);
             }
             return false;
+        },
+        async getUserPriorities(context, featureInVoting: IFeatureInVotingCreate): Promise<void> {
+            const priorities = await FeatureApi.getUserPriorities(context.getters.jwt, featureInVoting);
+            context.commit('setUserPriorities', priorities);
         }
     },
 

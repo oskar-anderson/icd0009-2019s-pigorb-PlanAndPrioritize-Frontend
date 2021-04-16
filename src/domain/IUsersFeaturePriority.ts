@@ -9,4 +9,5 @@ export interface IUsersFeaturePriority {
     priorityValue: number;
     priorityStatus: number;
     appUserId: string;
+    userName: string;
 }

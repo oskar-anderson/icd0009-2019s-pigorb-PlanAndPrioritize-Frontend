@@ -4,6 +4,8 @@ import { IFeatureCreate } from '@/domain/IFeatureCreate';
 import { IFeatureEdit } from '@/domain/IFeatureEdit';
 import { IFeatureState } from '@/domain/IFeatureState';
 import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
+import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
+import { IUsersFeaturePriority } from '@/domain/IUsersFeaturePriority';
 
 interface IResponse {
     status: string;
@@ -208,6 +210,24 @@ export abstract class FeatureApi {
         try {
             const response = await this.axios.get<IFeature[]>(url, auth);
             console.log('GetFeaturesNotInVoting response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
+    static async getUserPriorities(jwt: string, featureInVoting: IFeatureInVotingCreate) {
+        const url = 'GetUserPriorities/' + featureInVoting.featureId + '/' + featureInVoting.votingId;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IUsersFeaturePriority[]>(url, auth);
+            console.log('getUserPriorities response', response);
             if (response.status === 200) {
                 return response.data;
             }
