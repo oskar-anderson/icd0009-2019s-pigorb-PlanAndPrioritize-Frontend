@@ -17,4 +17,6 @@ export interface IFeature {
     categoryName: string;
     featureStatus: string;
     assignee: string;
+
+    isInOpenVoting: boolean;
 }

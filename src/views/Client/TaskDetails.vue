@@ -52,7 +52,7 @@
                         <p>Priority value </p>
                     </div>
                     <div class="column2">
-                        <p>{{checkValue(feature.priorityValue)}}</p>
+                        <p>{{showValueIfNot0AndNotInOpenVotings(feature.priorityValue, feature.isInOpenVoting)}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -76,7 +76,7 @@
                         <p>Size </p>
                     </div>
                     <div class="column2">
-                        <p>{{checkValue(feature.size)}}</p>
+                        <p>{{showValueIfNot0AndNotInOpenVotings(feature.size, feature.isInOpenVoting)}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -234,11 +234,18 @@ export default class TaskDetails extends Vue {
         return moment(date).format('DD.MM.YYYY HH:mm');
     }
 
-    checkValue(size: number): string | number {
-        if (size === 0) {
+    showValueIfNot0AndNotInOpenVotings(size: number, isInOpenVoting: boolean): string | number {
+        if (size === 0 || isInOpenVoting === true) {
             return "";
         }
         return size;
+    }
+
+    checkValue(value: number): string | number {
+        if (value === 0) {
+            return "";
+        }
+        return value;
     }
 
     days(count: number): string {

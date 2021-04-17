@@ -39,9 +39,9 @@
                         </router-link>
                     </td>
                     <td>{{feature.categoryName}}</td>
-                    <td style="text-align:center">{{checkValue(feature.size)}}</td>
+                    <td style="text-align:center">{{showValueIfNot0AndNotInOpenVotings(feature.size, feature.isInOpenVoting)}}</td>
                     <td>{{feature.assignee}}</td>
-                    <td style="text-align:center">{{checkValue(feature.priorityValue)}}</td>
+                    <td style="text-align:center">{{showValueIfNot0AndNotInOpenVotings(feature.priorityValue, feature.isInOpenVoting)}}</td>
                     <td>{{feature.featureStatus}}</td>
                     <td>{{formatDate(feature.startTime, feature.endTime)}}</td>
                     <td>
@@ -106,8 +106,8 @@ export default class TaskList extends Vue {
         return moment(startTime).format('DD.MM.YYYY') + " - " + moment(endTime).format('DD.MM.YYYY');
     }
 
-    checkValue(size: number): string | number {
-        if (size === 0) {
+    showValueIfNot0AndNotInOpenVotings(size: number, isInOpenVoting: boolean): string | number {
+        if (size === 0 || isInOpenVoting === true) {
             return "";
         }
         return size;
