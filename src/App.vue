@@ -33,6 +33,9 @@
             <span>
                 <router-link to="/contact" class="navbar-brand">Contact</router-link>
             </span>
+            <span>
+                <router-link to="/about" class="navbar-brand">About</router-link>
+            </span>
         </div>
         <div class="container-fluid">
             <main role="main">

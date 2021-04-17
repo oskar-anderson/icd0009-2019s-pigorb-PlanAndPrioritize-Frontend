@@ -202,6 +202,24 @@ export abstract class FeatureApi {
         }
     }
 
+    static async getFeaturesWithUsersPriorities(jwt: string, id: string): Promise<IFeatureWithPriority[]> {
+        const url = 'GetFeaturesWithUsersPriorities/' + id;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeatureWithPriority[]>(url, auth);
+            console.log('getFeaturesWithUsersPriorities response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
     static async getToDoFeaturesNotInVoting(jwt: string, id: string): Promise<IFeature[]> {
         const url = 'GetFeaturesNotInVoting/' + id;
         const auth = {

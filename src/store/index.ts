@@ -67,7 +67,8 @@ export default new Vuex.Store({
         usersForVoting: [] as IAppUser[],
         usersNotInVoting: [] as IAppUser[],
 
-        userFeaturePriorities: [] as IUsersFeaturePriority[]
+        userFeaturePriorities: [] as IUsersFeaturePriority[],
+        userHasVoted: false as boolean
     },
 
     mutations: {
@@ -153,6 +154,9 @@ export default new Vuex.Store({
         },
         setUserPriorities(state, priorities: IUsersFeaturePriority[]) {
             state.userFeaturePriorities = priorities;
+        },
+        setUserHasVoted(state, hasVoted: boolean) {
+            state.userHasVoted = hasVoted;
         }
     },
 
@@ -401,6 +405,10 @@ export default new Vuex.Store({
             const features = await FeatureApi.getFeaturesWithPriorityTemplate(context.getters.jwt, votingId);
             context.commit('setFeaturesWithPriority', features);
         },
+        async getFeaturesWithUsersPriorities(context, votingId: string): Promise<void> {
+            const features = await FeatureApi.getFeaturesWithUsersPriorities(context.getters.jwt, votingId);
+            context.commit('setFeaturesWithPriority', features);
+        },
         async getToDoFeaturesNotInVoting(context, votingId: string): Promise<void> {
             const features = await FeatureApi.getToDoFeaturesNotInVoting(context.getters.jwt, votingId);
             context.commit('setToDoFeaturesNotInVoting', features);
@@ -449,9 +457,19 @@ export default new Vuex.Store({
             }
             return false;
         },
+        async editVotes(context, featuresWithPriority: IFeatureWithPriority[]): Promise<boolean> {
+            if (context.getters.isAuthenticated && context.getters.jwt) {
+                return await VotingApi.editVotes(featuresWithPriority, context.getters.jwt);
+            }
+            return false;
+        },
         async getUserPriorities(context, featureInVoting: IFeatureInVotingCreate): Promise<void> {
             const priorities = await FeatureApi.getUserPriorities(context.getters.jwt, featureInVoting);
             context.commit('setUserPriorities', priorities);
+        },
+        async getUserHasVoted(context, votingId: string): Promise<void> {
+            const hasVoted = await VotingApi.getUserHasVoted(context.getters.jwt, votingId);
+            context.commit('setUserHasVoted', hasVoted);
         }
     },
 

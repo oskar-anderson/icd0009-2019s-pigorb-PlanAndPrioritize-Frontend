@@ -274,16 +274,6 @@ export abstract class VotingApi {
     }
 
     static async vote(featuresWithPriority: IFeatureWithPriority[], jwt: string): Promise<boolean> {
-        console.log("***** VOTE *****");
-        for (const feature of featuresWithPriority) {
-            console.log("Title: " + feature.title);
-            console.log("Size: " + feature.taskSize);
-            console.log("Business: " + feature.businessValue);
-            console.log("Time: " + feature.timeCriticality);
-            console.log("Risk: " + feature.riskOrOpportunity);
-            console.log("*****");
-        }
-
         const url = 'Vote';
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
@@ -293,6 +283,42 @@ export abstract class VotingApi {
             console.log('Vote response', response);
             if (response.status === 200) {
                 return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
+
+    static async editVotes(featuresWithPriority: IFeatureWithPriority[], jwt: string): Promise<boolean> {
+        const url = 'EditVotes';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.post<IFeatureWithPriority[]>(url, featuresWithPriority, auth);
+            console.log('editVotes response', response);
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
+
+    static async getUserHasVoted(jwt: string, votingId: string): Promise<boolean> {
+        const url = 'HasVoted/' + votingId;
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<boolean>(url, auth);
+            console.log('HasVoted response', response);
+            if (response.status === 200) {
+                return response.data;
             }
             return false;
         } catch (error) {

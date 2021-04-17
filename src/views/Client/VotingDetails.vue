@@ -18,9 +18,14 @@
                             <img src="../../assets/icons/edit_icon.png" height="20" style="float: right; margin-right: 15px; margin-top: 7px;" alt="edit-icon">
                         </router-link>
                     </span>
-                    <span v-if="isOpen() === true">
+                    <span v-if="isOpen() === true && hasFeatures() === true && userHasVoted === false">
                         <router-link :to="{name: 'Vote', params: { id: voting.id }}">
                             <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="float: right; margin-right: 15px;">Start voting</button>
+                        </router-link>
+                    </span>
+                    <span v-if="isOpen() === true && hasFeatures() === true && userHasVoted === true">
+                        <router-link :to="{name: 'EditVotes', params: { id: voting.id }}">
+                            <button type="submit" class="btn btn-outline-success my-2 my-sm-0" style="float: right; margin-right: 15px;">Edit votes</button>
                         </router-link>
                     </span>
                 </h5>
@@ -189,6 +194,10 @@ export default class TaskDetails extends Vue {
         return store.state.usersNotInVoting;
     }
 
+    get userHasVoted(): boolean {
+        return store.state.userHasVoted;
+    }
+
     private chooseTask = false;
 
     private chooseUser = false;
@@ -284,6 +293,7 @@ export default class TaskDetails extends Vue {
         store.dispatch("getToDoFeaturesNotInVoting", this.id);
         store.dispatch("getUsersForVoting", this.id);
         store.dispatch("getUsersNotInVoting", this.id);
+        store.dispatch("getUserHasVoted", this.id);
     }
 }
 </script>

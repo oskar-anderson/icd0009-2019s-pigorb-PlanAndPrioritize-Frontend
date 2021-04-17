@@ -13,6 +13,7 @@ import TaskEdit from '../views/Client/TaskEdit.vue'
 import TaskDetails from '../views/Client/TaskDetails.vue'
 
 import Contact from '../views/Client/Contact.vue'
+import About from '../views/Client/About.vue'
 import Roadmap from '../views/Client/Roadmap.vue'
 import AssignedVotings from '../views/Client/AssignedVotings.vue'
 import Categories from '../views/Client/Categories.vue'
@@ -24,6 +25,7 @@ import VotingCreate from '../views/Client/VotingCreate.vue'
 import VotingDetails from '../views/Client/VotingDetails.vue'
 import VotingEdit from '../views/Client/VotingEdit.vue'
 import Vote from '../views/Client/Vote.vue'
+import EditVotes from '../views/Client/EditVotes.vue'
 import TaskPriorityHistory from '../views/Client/TaskPriorityHistory.vue'
 
 Vue.use(VueRouter)
@@ -48,6 +50,7 @@ const routes: Array<RouteConfig> = [
     { path: '/voting/:id?', name: 'VotingDetails', component: VotingDetails, props: true },
     { path: '/edit-voting/:id?', name: 'VotingEdit', component: VotingEdit, props: true },
     { path: '/vote/:id?', name: 'Vote', component: Vote, props: true },
+    { path: '/re-vote/:id?', name: 'EditVotes', component: EditVotes, props: true },
 
     { path: '/login', name: 'AccountLogin', component: AccountLogin },
     { path: '/usermanager', name: 'UserManagerIndex', component: UserManagerIndex },
@@ -55,7 +58,8 @@ const routes: Array<RouteConfig> = [
     { path: '/role', name: 'CreateDeleteRole', component: CreateDeleteRole },
     { path: '/changePassword', name: 'ChangePassword', component: ChangePassword },
 
-    { path: '/contact', name: 'Contact', component: Contact }
+    { path: '/contact', name: 'Contact', component: Contact },
+    { path: '/about', name: 'About', component: About }
 ]
 
 const router = new VueRouter({

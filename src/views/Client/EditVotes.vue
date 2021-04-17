@@ -9,7 +9,7 @@
         <div v-else class="main">
             <div class="card">
             <div class="card-header">
-                <h5>{{voting.title}}</h5>
+                <h5>Redo voting for '{{voting.title}}'</h5>
             </div>
             <div class="card-body">
                 <h6 v-if="errorMessage != ''" class="text-danger">{{errorMessage}}</h6>
@@ -92,7 +92,7 @@ import { IFeatureWithPriority } from "@/domain/IFeatureWithPriority";
 import router from "@/router";
 
 @Component
-export default class Vote extends Vue {
+export default class EditVotes extends Vue {
     @Prop()
     private id!: string;
 
@@ -136,7 +136,7 @@ export default class Vote extends Vue {
             for (const feature of this.features) {
                 feature.votingId = this.id;
             }
-            const result = await store.dispatch("vote", this.features);
+            const result = await store.dispatch("editVotes", this.features);
             if (result === true) {
                 router.push("/assigned");
             }
@@ -145,7 +145,7 @@ export default class Vote extends Vue {
 
     mounted(): void {
         store.dispatch("getVoting", this.id);
-        store.dispatch("getFeaturesWithPriorityTemplate", this.id);
+        store.dispatch("getFeaturesWithUsersPriorities", this.id);
     }
 }
 </script>
