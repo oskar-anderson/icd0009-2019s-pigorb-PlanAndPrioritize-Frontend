@@ -6,6 +6,7 @@ import { IFeatureState } from '@/domain/IFeatureState';
 import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
 import { IUsersFeaturePriority } from '@/domain/IUsersFeaturePriority';
+import { IFeatureForGraph } from '@/domain/IFeatureForGraph';
 
 interface IResponse {
     status: string;
@@ -31,6 +32,24 @@ export abstract class FeatureApi {
         try {
             const response = await this.axios.get<IFeature[]>(url, auth);
             console.log('getAllFeatures response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return [];
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return [];
+        }
+    }
+
+    static async getFeaturesForGraph(jwt: string): Promise<IFeatureForGraph[]> {
+        const url = 'GetFeaturesForGraph';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<IFeatureForGraph[]>(url, auth);
+            console.log('GetFeaturesForGraph response', response);
             if (response.status === 200) {
                 return response.data;
             }

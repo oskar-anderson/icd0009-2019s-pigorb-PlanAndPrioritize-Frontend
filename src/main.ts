@@ -11,8 +11,11 @@ import router from './router'
 import store from './store'
 
 import moment from 'moment'
+import { GGanttChart, GGanttRow } from 'vue-ganttastic';
 
 Vue.prototype.moment = moment
+Vue.prototype.GGanttChart = GGanttChart
+Vue.prototype.GGanttRow = GGanttRow
 Vue.config.productionTip = false
 
 new Vue({

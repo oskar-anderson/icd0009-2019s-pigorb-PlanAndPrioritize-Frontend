@@ -37,7 +37,6 @@ export abstract class CategoryApi {
         }
     }
 
-
     static async getAllCategoriesPlain(jwt: string): Promise<ICategoryEdit[]> {
         const url = 'GetCategoriesPlain';
         const auth = {

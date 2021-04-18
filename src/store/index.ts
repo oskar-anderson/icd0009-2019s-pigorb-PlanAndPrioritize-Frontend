@@ -33,6 +33,7 @@ import { IUserInVotingCreate } from '@/domain/IUserInVotingCreate';
 import { IVotingEdit } from '@/domain/IVotingEdit';
 import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 import { IUsersFeaturePriority } from '@/domain/IUsersFeaturePriority';
+import { IFeatureForGraph } from '@/domain/IFeatureForGraph';
 
 Vue.use(Vuex)
 
@@ -51,6 +52,7 @@ export default new Vuex.Store({
         toDoFeatures: [] as IFeature[],
         featureStates: [] as IFeatureState[],
         featuresWithPriority: [] as IFeatureWithPriority[],
+        featuresForGraph: [] as IFeatureForGraph[],
 
         category: null as ICategoryEdit | null,
         categories: [] as ICategory[],
@@ -109,6 +111,9 @@ export default new Vuex.Store({
         },
         setFeatureStates(state, states: IFeatureState[]) {
             state.featureStates = states;
+        },
+        setFeaturesForGraph(state, features: IFeatureForGraph[]) {
+            state.featuresForGraph = features;
         },
 
         setCategories(state, categories: ICategory[]) {
@@ -272,6 +277,10 @@ export default new Vuex.Store({
         async getFeatures(context): Promise<void> {
             const features = await FeatureApi.getAllFeatures(this.state.search, context.getters.jwt);
             context.commit('setFeatures', features);
+        },
+        async getFeaturesForGraph(context): Promise<void> {
+            const features = await FeatureApi.getFeaturesForGraph(context.getters.jwt);
+            context.commit('setFeaturesForGraph', features);
         },
         async getToDoFeatures(context): Promise<void> {
             const features = await FeatureApi.getToDoFeatures(context.getters.jwt);
