@@ -28,7 +28,7 @@
                 :row-label-width="`${rowLabelWidth}%`"
                 theme="vue"
             >
-                <g-gantt-row
+                <g-gantt-row @click="routeToTask(feature.id)"
                     v-for="feature in features"
                     :key="feature.id"
                     :label="feature.title"
@@ -43,6 +43,14 @@
                 </g-gantt-row>
             </g-gantt-chart>
         </div>
+        <br>
+        <div class="text-muted">
+            <label class="control-label">Show number of tasks</label>
+        </div>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" v-model="limit" type="number" min="1" step="1">
+            <button @click="load()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Load</button>
+        </form>
     </div>
 </template>
 
@@ -67,21 +75,27 @@ export default class Roadmap extends Vue {
         return store.state.featuresForGraph;
     }
 
+    private limit = 100;
+
     private graphStart = moment().startOf("day").format("YYYY-MM-DD");
 
     private graphEnd = moment().startOf("day").add(7, "days").format("YYYY-MM-DD");
 
     private highlightOnHover = true;
 
-    // Change this if want to display task names on left column
-    private rowLabelWidth = 0;
+    // Change this if want to display task names on left column or not (0 will not show)
+    private rowLabelWidth = 10;
+
+    load(): void {
+        store.dispatch("getFeaturesForGraph", this.limit);
+    }
 
     routeToTask(featureId: string): void {
         router.push("/task/" + featureId)
     }
 
     mounted(): void {
-        store.dispatch("getFeaturesForGraph");
+        store.dispatch("getFeaturesForGraph", this.limit);
     }
 }
 </script>

@@ -5,7 +5,7 @@
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container">
                         <form v-if="isAuthenticated === true" class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" v-model="search" maxlength="50" placeholder="Search task">
+                            <input class="form-control mr-sm-2" v-model="parameters.search" maxlength="50" placeholder="Search task">
                             <button @click="searchOnClick()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                         </form>
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
@@ -47,6 +47,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Identity from "./components/Identity.vue";
+import { IFeatureRequest } from "./domain/IFeatureRequest";
 import router from "./router";
 import store from './store';
 
@@ -57,7 +58,9 @@ import store from './store';
 })
 
 export default class App extends Vue {
-    private search = "";
+    get parameters(): IFeatureRequest {
+        return store.state.featuresParameters;
+    };
 
     get isAuthenticated(): boolean {
         return store.getters.isAuthenticated;
@@ -68,14 +71,16 @@ export default class App extends Vue {
     }
 
     searchOnClick(): void {
-        store.dispatch("setSearch", this.search)
+        store.dispatch("setFeaturesParameters", this.parameters)
         store.dispatch("getFeatures");
-        this.search = "";
+        this.parameters.search = "";
         router.push("/")
     }
 
     clearSearch(): void {
-        store.dispatch("setSearch", "")
+        this.parameters.limit = 100;
+        this.parameters.search = '';
+        store.dispatch("setFeaturesParameters", this.parameters)
         store.dispatch("getFeatures");
     }
 }

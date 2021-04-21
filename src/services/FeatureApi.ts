@@ -7,6 +7,7 @@ import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 import { IFeatureInVotingCreate } from '@/domain/IFeatureInVotingCreate';
 import { IUsersFeaturePriority } from '@/domain/IUsersFeaturePriority';
 import { IFeatureForGraph } from '@/domain/IFeatureForGraph';
+import { IFeatureRequest } from '@/domain/IFeatureRequest';
 
 interface IResponse {
     status: string;
@@ -24,8 +25,13 @@ export abstract class FeatureApi {
         }
     )
 
-    static async getAllFeatures(search: string, jwt: string): Promise<IFeature[]> {
-        const url = 'GetFeaturesForList/' + search;
+    static async getAllFeatures(request: IFeatureRequest | null, jwt: string): Promise<IFeature[]> {
+        let url;
+        if (request === null) {
+            url = 'GetFeaturesForList/100/';
+        } else {
+            url = 'GetFeaturesForList/' + request.limit + '/' + request.search;
+        }
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
@@ -42,8 +48,8 @@ export abstract class FeatureApi {
         }
     }
 
-    static async getFeaturesForGraph(jwt: string): Promise<IFeatureForGraph[]> {
-        const url = 'GetFeaturesForGraph';
+    static async getFeaturesForGraph(limit: number, jwt: string): Promise<IFeatureForGraph[]> {
+        const url = 'GetFeaturesForGraph/' + limit;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }

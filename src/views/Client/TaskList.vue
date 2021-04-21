@@ -59,12 +59,21 @@
                 </tr>
             </tbody>
         </table>
+        <br>
+        <div class="text-muted">
+            <label class="control-label">Load number of tasks</label>
+        </div>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" v-model="requestParameters.limit" type="number" min="1" step="1" placeholder="Limit">
+            <button @click="load()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Load</button>
+        </form>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { IFeature } from "@/domain/IFeature";
+import { IFeatureRequest } from "@/domain/IFeatureRequest";
 import moment from "moment";
 import { Component, Vue } from "vue-property-decorator";
 import store from "./../../store";
@@ -81,6 +90,15 @@ export default class TaskList extends Vue {
 
     get features(): IFeature[] {
         return store.state.features;
+    }
+
+    get requestParameters(): IFeatureRequest | null {
+        return store.state.featuresParameters;
+    }
+
+    async load(): Promise<void> {
+        await store.dispatch("setFeaturesParameters", this.requestParameters);
+        store.dispatch("getFeatures");
     }
 
     ConfirmDelete(feature: IFeature): void {

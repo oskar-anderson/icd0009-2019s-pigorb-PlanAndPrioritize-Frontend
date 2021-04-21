@@ -34,13 +34,13 @@ import { IVotingEdit } from '@/domain/IVotingEdit';
 import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 import { IUsersFeaturePriority } from '@/domain/IUsersFeaturePriority';
 import { IFeatureForGraph } from '@/domain/IFeatureForGraph';
+import { IFeatureRequest } from '@/domain/IFeatureRequest';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        search: "",
-
+        featuresParameters: { limit: 100, search: '' } as IFeatureRequest,
         users: [] as IUser[],
         roles: [] as IRole[],
         role: null as IRole | null,
@@ -154,8 +154,8 @@ export default new Vuex.Store({
         setUsersNotInVoting(state, users: IAppUser[]) {
             state.usersNotInVoting = users;
         },
-        setSearch(state, search: string) {
-            state.search = search;
+        setFeaturesParameters(state, parameters: IFeatureRequest) {
+            state.featuresParameters = parameters;
         },
         setUserPriorities(state, priorities: IUsersFeaturePriority[]) {
             state.userFeaturePriorities = priorities;
@@ -199,12 +199,12 @@ export default new Vuex.Store({
     },
 
     actions: {
-        setSearch(context, search: string) {
-            context.commit('setSearch', search);
-        },
         clearJwt(context): void {
             context.commit('setJwt', null);
             context.commit('setRequirePasswordChange', false);
+        },
+        setFeaturesParameters(context, parameters: IFeatureRequest) {
+            context.commit('setFeaturesParameters', parameters);
         },
         async authenticateUser(context, loginDTO: ILoginDTO): Promise<boolean> {
             const loginResponse = await AccountApi.getJwt(loginDTO);
@@ -275,11 +275,11 @@ export default new Vuex.Store({
         },
 
         async getFeatures(context): Promise<void> {
-            const features = await FeatureApi.getAllFeatures(this.state.search, context.getters.jwt);
+            const features = await FeatureApi.getAllFeatures(this.state.featuresParameters, context.getters.jwt);
             context.commit('setFeatures', features);
         },
-        async getFeaturesForGraph(context): Promise<void> {
-            const features = await FeatureApi.getFeaturesForGraph(context.getters.jwt);
+        async getFeaturesForGraph(context, limit: number): Promise<void> {
+            const features = await FeatureApi.getFeaturesForGraph(limit, context.getters.jwt);
             context.commit('setFeaturesForGraph', features);
         },
         async getToDoFeatures(context): Promise<void> {
@@ -304,7 +304,7 @@ export default new Vuex.Store({
         async deleteFeature(context, featureId: string): Promise<void> {
             if (context.getters.isAdmin && context.getters.jwt) {
                 await FeatureApi.deleteFeature(featureId, context.getters.jwt);
-                const features = await FeatureApi.getAllFeatures(this.state.search, context.getters.jwt);
+                const features = await FeatureApi.getAllFeatures(this.state.featuresParameters, context.getters.jwt);
                 context.commit('setFeatures', features);
             }
         },

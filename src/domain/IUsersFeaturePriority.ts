@@ -7,7 +7,6 @@ export interface IUsersFeaturePriority {
     featureId: string;
     votingId: string;
     priorityValue: number;
-    priorityStatus: number;
     appUserId: string;
     userName: string;
 }
