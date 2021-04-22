@@ -210,7 +210,7 @@ export abstract class FeatureApi {
     }
 
     static async getFeaturesWithPriorityTemplate(jwt: string, id: string): Promise<IFeatureWithPriority[]> {
-        const url = 'GetFeaturesWithPriority/' + id;
+        const url = 'GetFeaturesForVoting/' + id;
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }
         }
