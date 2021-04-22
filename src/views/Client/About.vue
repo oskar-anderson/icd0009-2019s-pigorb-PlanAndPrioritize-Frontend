@@ -22,6 +22,7 @@
                 Users can see priority votings assigned to them (with voting status) at Assigned votings page.
 
                 Priorities and task sizes are calculated as all users values average using WSJF method.
+                Suggested is to use Finonaccy numbers for assigning priorities - 1, 2, 3, 5, 8 etc.
                 Average is calculated based on users who have voted. If some don't vote, it doesn't affect size and priority values.
                 User can change priority values unlimited times during open voting, last one will count.
 
