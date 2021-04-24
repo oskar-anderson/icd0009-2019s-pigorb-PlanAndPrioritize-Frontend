@@ -7,6 +7,7 @@ import CreateDeleteUser from '../views/UserManager/CreateDeleteUser.vue'
 import CreateDeleteRole from '../views/UserManager/CreateDeleteRole.vue'
 import ChangePassword from '../views/Account/ChangePassword.vue'
 
+import Home from '../views/Client/Home.vue'
 import TaskList from '../views/Client/TaskList.vue'
 import TaskCreate from '../views/Client/TaskCreate.vue'
 import TaskEdit from '../views/Client/TaskEdit.vue'
@@ -31,7 +32,8 @@ import TaskPriorityHistory from '../views/Client/TaskPriorityHistory.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-    { path: '/', name: 'TaskList', component: TaskList, props: true },
+    { path: '/', name: 'Home', component: Home },
+    { path: '/list', name: 'TaskList', component: TaskList, props: true },
     { path: '/create-task', name: 'TaskCreate', component: TaskCreate },
     { path: '/edit-task/:id?', name: 'TaskEdit', component: TaskEdit, props: true },
     { path: '/task/:id?', name: 'TaskDetails', component: TaskDetails, props: true },

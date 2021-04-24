@@ -17,7 +17,7 @@
         </header>
         <div v-if="isAuthenticated === true" class="sidenav">
             <span @click="clearSearch()">
-            <router-link to="/" class="navbar-brand">Task List</router-link>
+            <router-link to="/list" class="navbar-brand">Task List</router-link>
             </span>
             <router-link to="/roadmap" class="navbar-brand">Roadmap</router-link>
             <router-link to="/assigned" class="navbar-brand">Assigned Votings</router-link>
@@ -74,7 +74,7 @@ export default class App extends Vue {
         store.dispatch("setFeaturesParameters", this.parameters)
         store.dispatch("getFeatures");
         this.parameters.search = "";
-        router.push("/")
+        router.push("/list")
     }
 
     clearSearch(): void {

@@ -209,7 +209,7 @@ export default class TaskDetails extends Vue {
 
     async delete(featureId: string): Promise<void> {
         store.dispatch("deleteFeature", featureId);
-        router.push("/");
+        router.push("/list");
     }
 
     async addComment(): Promise<void> {

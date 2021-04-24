@@ -45,6 +45,7 @@ export default new Vuex.Store({
         roles: [] as IRole[],
         role: null as IRole | null,
         requirePasswordChange: true,
+        hasAssignedOpenVotings: false,
 
         feature: null as IFeature | null,
         featurePlain: null as IFeatureEdit | null,
@@ -162,6 +163,9 @@ export default new Vuex.Store({
         },
         setUserHasVoted(state, hasVoted: boolean) {
             state.userHasVoted = hasVoted;
+        },
+        setHasAssignedOpenVotings(state, hasAssignedOpenVotings: boolean) {
+            state.hasAssignedOpenVotings = hasAssignedOpenVotings;
         }
     },
 
@@ -212,7 +216,9 @@ export default new Vuex.Store({
             context.commit('setJwt', jwt);
             const requirePasswordChange = loginResponse?.requirePasswordChange;
             context.commit('setRequirePasswordChange', requirePasswordChange);
-            return jwt !== null;
+            const hasVotings = await VotingApi.getHasAssignedOpenVotings(jwt);
+            context.commit('setHasAssignedOpenVotings', hasVotings);
+            return jwt !== undefined;
         },
         async registerUser(context, registerDTO: IRegisterDTO): Promise<boolean> {
             return await AccountApi.registerUser(registerDTO);

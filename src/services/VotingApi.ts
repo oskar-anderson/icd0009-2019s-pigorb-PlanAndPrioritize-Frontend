@@ -326,4 +326,22 @@ export abstract class VotingApi {
             return false;
         }
     }
+
+    static async getHasAssignedOpenVotings(jwt: string | undefined): Promise<boolean> {
+        const url = 'HasAssignedOpenVotings';
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.get<boolean>(url, auth);
+            console.log('HasAssignedOpenVotings response', response);
+            if (response.status === 200) {
+                return response.data;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
 }

@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-3">
             <h4>Log in</h4>
-            <h5 v-if="loginWasOk === false" class="text-danger">Bad login attempt!</h5>
+            <h6 v-if="loginWasOk === false" class="text-danger">Bad login attempt!</h6>
             <hr />
             <div class="form-group">
                 <label for="Input_Email">Email</label>
@@ -19,7 +19,7 @@
                 />
             </div>
             <div class="form-group">
-                <button @click="loginOnClick($event)" class="btn btn-outline-success my-2 my-sm-0">Log in</button>
+                <button @click="loginOnClick()" class="btn btn-outline-success my-2 my-sm-0">Log in</button>
             </div>
         </div>
     </div>
@@ -41,29 +41,25 @@ export default class LoginIndex extends Vue {
 
     private loginWasOk: boolean | null = null;
 
-    loginOnClick(): void {
-        if (
-            this.loginInfo.email.length > 0 &&
-            this.loginInfo.password.length > 0
-        ) {
-            store
-                .dispatch("authenticateUser", this.loginInfo)
-                .then((isLoggedIn: boolean) => {
-                    if (isLoggedIn) {
-                        console.log("User signed in");
-                        this.loginWasOk = true;
-                        const requirePasswordChange = store.state.requirePasswordChange;
-                        let route = "/";
-                        if (requirePasswordChange) {
-                            route = "/changePassword";
-                        }
-                        router.push(route);
-                        location.reload();
-                    } else {
-                        this.loginWasOk = false;
-                    }
-                });
-        }
+    async loginOnClick(): Promise<void> {
+        if (this.loginInfo.email.length > 0 && this.loginInfo.password.length > 0) {
+            const isLoggedIn = await store.dispatch("authenticateUser", this.loginInfo);
+            if (isLoggedIn) {
+                console.log("User signed in");
+                this.loginWasOk = true;
+                const requirePasswordChange = store.state.requirePasswordChange;
+                const hasAssignedOpenVotings = store.state.hasAssignedOpenVotings;
+                let route = "/list";
+                if (requirePasswordChange) {
+                    route = "/changePassword";
+                } else if (hasAssignedOpenVotings) {
+                    route = "/assigned";
+                }
+                router.push(route);
+            } else {
+                this.loginWasOk = false;
+            }
+        };
     }
 }
 </script>
