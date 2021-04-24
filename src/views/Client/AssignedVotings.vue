@@ -12,29 +12,61 @@
             <h5>Assigned priority votings</h5>
         </div>
         <br>
-        <table v-if="hasAssignedVotings() === true" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByTitle()"></th>
-                    <th>Description <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByDescription()"></th>
-                    <th>Status <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStatus()"></th>
-                    <th>Open for voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStartDate()"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="voting in votings" :key="voting.id">
-                    <td>
-                         <router-link :to="{name: 'VotingDetails', params: { id: voting.id }}">
-                            {{voting.title}}
-                        </router-link>
-                    </td>
-                    <td style="max-width: 50em;">{{voting.description}}</td>
-                    <td>{{voting.votingStatus}}</td>
-                    <td>{{formatDates(voting.startTime, voting.endTime)}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <div v-if="hasAssignedVotings() === false">
+        <div v-if="hasOpenVotings() === true">
+            <h6><mark>Currently open priority votings</mark></h6>
+            <br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByTitle()"></th>
+                        <th>Description <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByDescription()"></th>
+                        <th>Status <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStatus()"></th>
+                        <th>Open for voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStartDate()"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="voting in openVotings()" :key="voting.id">
+                        <td>
+                            <router-link :to="{name: 'VotingDetails', params: { id: voting.id }}">
+                                {{voting.title}}
+                            </router-link>
+                        </td>
+                        <td style="max-width: 50em;">{{voting.description}}</td>
+                        <td>{{voting.votingStatus}}</td>
+                        <td>{{formatDates(voting.startTime, voting.endTime)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+        </div>
+
+        <div v-if="hasNotOpenVotings() === true">
+            <h6><mark>Not open priority votings</mark></h6>
+            <br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByTitle()"></th>
+                        <th>Description <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByDescription()"></th>
+                        <th>Status <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStatus()"></th>
+                        <th>Open for voting <img src="../../assets/icons/sort_icon.png" height="11" alt="sort-icon" @click="sortByStartDate()"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="voting in notOpenVotings()" :key="voting.id">
+                        <td>
+                            <router-link :to="{name: 'VotingDetails', params: { id: voting.id }}">
+                                {{voting.title}}
+                            </router-link>
+                        </td>
+                        <td style="max-width: 50em;">{{voting.description}}</td>
+                        <td>{{voting.votingStatus}}</td>
+                        <td>{{formatDates(voting.startTime, voting.endTime)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-if="hasOpenVotings() === false && hasNotOpenVotings() === false">
             <h6>You have currently no assigned votings!</h6>
         </div>
         </div>
@@ -55,6 +87,14 @@ export default class AssignedVotings extends Vue {
 
     get votings(): IVoting[] {
         return store.state.votings;
+    }
+
+    openVotings(): IVoting[] {
+        return this.votings.filter(voting => voting.votingStatus === "Open");
+    }
+
+    notOpenVotings(): IVoting[] {
+        return this.votings.filter(voting => voting.votingStatus !== "Open");
     }
 
     formatDates(startTime: Date | null, endTime: Date | null): string {
@@ -105,8 +145,12 @@ export default class AssignedVotings extends Vue {
         this.datesSort *= -1;
     }
 
-    hasAssignedVotings(): boolean {
-        return this.votings.length > 0;
+    hasOpenVotings(): boolean {
+        return this.openVotings().length > 0;
+    }
+
+    hasNotOpenVotings(): boolean {
+        return this.notOpenVotings().length > 0;
     }
 
     mounted(): void {
