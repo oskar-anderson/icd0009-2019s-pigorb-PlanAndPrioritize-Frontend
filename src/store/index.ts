@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { ILoginDTO } from '@/types/ILoginDTO';
 import { AccountApi } from '@/services/AccountApi';
-import { IRegisterDTO } from '@/types/IRegisterDTO';
 import { IUser } from '@/domain/IUser';
 import { IRole } from '@/domain/IRole';
 import { IToken } from '@/domain/IToken';
@@ -220,9 +219,6 @@ export default new Vuex.Store({
             const hasVotings = await VotingApi.getHasAssignedOpenVotings(jwt);
             context.commit('setHasAssignedOpenVotings', hasVotings);
             return jwt !== undefined;
-        },
-        async registerUser(context, registerDTO: IRegisterDTO): Promise<boolean> {
-            return await AccountApi.registerUser(registerDTO);
         },
         async changePassword(context, passwordDTO: IPasswordDTO): Promise<boolean> {
             return await AccountApi.changePassword(context.getters.jwt, passwordDTO);

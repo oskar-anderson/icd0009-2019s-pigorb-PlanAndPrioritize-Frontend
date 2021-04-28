@@ -1,5 +1,4 @@
 import { IUserDelete } from './../domain/IUserDelete';
-import { IRegisterDTO } from './../types/IRegisterDTO';
 import { ILoginDTO } from './../types/ILoginDTO';
 import Axios from 'axios';
 import { IUser } from '@/domain/IUser';
@@ -43,21 +42,6 @@ export abstract class AccountApi {
         } catch (error) {
             console.log('error: ', (error as Error).message);
             return null;
-        }
-    }
-
-    static async registerUser(registerDTO: IRegisterDTO): Promise<boolean> {
-        const url = "account/register";
-        try {
-            const response = await this.axios.post<IResponse>(url, registerDTO);
-            console.log('register response', response);
-            if (response.status === 200) {
-                return true;
-            }
-            return false;
-        } catch (error) {
-            console.log('error: ', (error as Error).message);
-            return false;
         }
     }
 
