@@ -42,6 +42,8 @@
 
                 New users can be created and deleted only by administrator.
                 Initial password is set by administrator but password change is required for user after first login.
+                If you forget yor password please contact the administrator and request new password.
+                Password change will be required on first login after password reset by administrator.
             </pre>
         </div>
         </div>

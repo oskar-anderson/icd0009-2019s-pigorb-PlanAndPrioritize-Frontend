@@ -1,6 +1,7 @@
 <template>
     <div class="main">
     <h5>Create new user</h5>
+    <div class="text-muted">User will be prompted to reset password at first login</div>
     <br>
     <h6 v-if="userCreatingSucceeded === true" class="text-success">{{successMessage}}</h6>
     <h6 v-if="incorrectEmail === true" class="text-danger">Inncorrect email</h6>
@@ -146,6 +147,49 @@
         </div>
     </div>
     <hr />
+
+    <h5>Reset user password</h5>
+    <div class="text-muted">User will be prompted to reset password at first login</div>
+    <br>
+    <h6 v-if="passwordResetSucceeded === true" class="text-success">{{successMessage}}</h6>
+    <h6 v-if="resetPassWordsDontMatch === true" class="text-danger">Passwords don't match!</h6>
+    <h6 v-if="passwordResetFailed === true" class="text-danger">{{errorMessage}}</h6>
+    <div class="row">
+        <div class="col-md-3">
+            <form>
+                <div class="form-group">
+                    <label class="control-label">User</label>
+                    <select class="form-control" v-model="resetPasswordDto.email">
+                        <option v-for="user in users" :key="user.email">
+                            {{user.email}}
+                        </option>
+                    </select>
+                </div>
+            <div class="form-group">
+                <label for="Input_Reset_Password">Password</label>
+                <input
+                    v-model="resetPasswordDto.password"
+                    class="form-control"
+                    type="password"
+                    id="Input_Reset_Password"
+                />
+            </div>
+            <div class="form-group">
+                <label for="Input_Reset_Password_Confirm">Confirm password</label>
+                <input
+                    v-model="confirmResetPassword"
+                    class="form-control"
+                    type="password"
+                    id="Input_Reset_Password_Confirm"
+                />
+            </div>
+                <div class="form-group">
+                    <button type="submit" @click="resetPassword()" class="btn btn-outline-success my-2 my-sm-0">Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr />
     </div>
 </template>
 
@@ -156,6 +200,7 @@ import { IUser } from '../../domain/IUser';
 import { IUserCreate } from '../../domain/IUserCreate';
 import { IUserDelete } from '../../domain/IUserDelete';
 import { IUserRole } from '../../domain/IUserRole';
+import { IResetPasswordDTO } from '../../types/IResetPasswordDTO';
 import store from "../../store";
 
 @Component
@@ -174,6 +219,11 @@ export default class CreateDeleteUser extends Vue {
     private userDeletingSucceeded = false;
     private userCreatingFailed = false;
     private userCreatingSucceeded = false;
+
+    private passwordResetSucceeded = false;
+    private resetPassWordsDontMatch = false;
+    private passwordResetFailed = false;
+    private confirmResetPassword = '';
 
     private userToCreate: IUserCreate = {
         email: '',
@@ -197,6 +247,11 @@ export default class CreateDeleteUser extends Vue {
         roleName: ''
     };
 
+    private resetPasswordDto: IResetPasswordDTO = {
+        email: '',
+        password: ''
+    };
+
     get roles(): IRole[] {
         return store.state.roles;
     }
@@ -218,6 +273,9 @@ export default class CreateDeleteUser extends Vue {
         this.userCreatingSucceeded = false;
         this.incorrectEmail = false;
         this.passWordsDontMatch = false;
+        this.passwordResetSucceeded = false;
+        this.resetPassWordsDontMatch = false;
+        this.passwordResetFailed = false;
     }
 
     async addRoleToUser(): Promise<void> {
@@ -283,6 +341,27 @@ export default class CreateDeleteUser extends Vue {
                 this.userToCreate.email = "";
                 this.userToCreate.password = "";
                 this.confirmPassword = "";
+            }
+        }
+    }
+
+    async resetPassword(): Promise<void> {
+        this.resetActionsAndMessages();
+        if (this.resetPasswordDto.password !== this.confirmResetPassword) {
+            this.resetPassWordsDontMatch = true;
+        } else {
+            const result = await store.dispatch('resetPassword', this.resetPasswordDto);
+
+            if (result === false) {
+                this.passwordResetFailed = true;
+                this.errorMessage = "Password reset failed. " +
+                "Password must be 6-100 characters long, contain upper and lower case letters, numbers and special characters!";
+            } else {
+                this.passwordResetSucceeded = true;
+                this.successMessage = 'Password changed! User will be prompted to change password on first login';
+                this.resetPasswordDto.email = "";
+                this.resetPasswordDto.password = "";
+                this.confirmResetPassword = "";
             }
         }
     }

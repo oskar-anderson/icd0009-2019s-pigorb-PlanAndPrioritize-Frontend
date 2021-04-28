@@ -7,6 +7,7 @@ import { IRole } from '@/domain/IRole';
 import { IUserRole } from '@/domain/IUserRole';
 import { IUserCreate } from '@/domain/IUserCreate';
 import { IPasswordDTO } from '@/types/IPasswordDTO';
+import { IResetPasswordDTO } from '@/types/IResetPasswordDTO';
 
 interface ILoginResponse {
     token: string;
@@ -62,10 +63,27 @@ export abstract class AccountApi {
 
     static async changePassword(passwordDTO: IPasswordDTO): Promise<boolean> {
         const url = "account/changePassword";
-        console.log('Change password - email: ' + passwordDTO.email + ', old: ' + passwordDTO.oldPassword + ', new: ' + passwordDTO.newPassword);
         try {
             const response = await this.axios.post<IRegisterResponse>(url, passwordDTO);
             console.log('change password response', response);
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error: ', (error as Error).message);
+            return false;
+        }
+    }
+
+    static async resetPassword(jwt: string, passwordDTO: IResetPasswordDTO): Promise<boolean> {
+        const url = "Usermanager/ResetPassword";
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
+        try {
+            const response = await this.axios.post<IRegisterResponse>(url, passwordDTO, auth);
+            console.log('Reset password response', response);
             if (response.status === 200) {
                 return true;
             }
@@ -204,7 +222,6 @@ export abstract class AccountApi {
     }
 
     static async createUserWithRole(user: IUserCreate, jwt: string): Promise<boolean> {
-        console.log("Role: " + user.roleName);
         const url = "/UserManager/CreateUser";
         const auth = {
             headers: { Authorization: 'Bearer ' + jwt }

@@ -220,7 +220,7 @@ export default class TaskList extends Vue {
     }
 
     mounted(): void {
-        // One of two pages were user is redirected in login
+        // One of three pages were user is redirected in login
         // Without reload after login isAuthenticated is false
         if (this.isAuthenticated === false) {
             location.reload();

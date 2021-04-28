@@ -35,6 +35,7 @@ import { IFeatureWithPriority } from '@/domain/IFeatureWithPriority';
 import { IUsersFeaturePriority } from '@/domain/IUsersFeaturePriority';
 import { IFeatureForGraph } from '@/domain/IFeatureForGraph';
 import { IFeatureRequest } from '@/domain/IFeatureRequest';
+import { IResetPasswordDTO } from '@/types/IResetPasswordDTO';
 
 Vue.use(Vuex)
 
@@ -225,6 +226,9 @@ export default new Vuex.Store({
         },
         async changePassword(context, passwordDTO: IPasswordDTO): Promise<boolean> {
             return await AccountApi.changePassword(passwordDTO);
+        },
+        async resetPassword(context, resetPasswordDTO: IResetPasswordDTO): Promise<boolean> {
+            return await AccountApi.resetPassword(context.getters.jwt, resetPasswordDTO);
         },
         async getUsers(context): Promise<void> {
             const users = await AccountApi.getUsers(context.getters.jwt);

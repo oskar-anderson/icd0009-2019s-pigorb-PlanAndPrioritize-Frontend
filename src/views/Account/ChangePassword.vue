@@ -85,5 +85,13 @@ export default class ChangePassword extends Vue {
             }
         }
     }
+
+    mounted(): void {
+        // One of three pages were user is redirected in login
+        // Without reload after login isAuthenticated is false
+        if (this.isAuthenticated === false) {
+            location.reload();
+        }
+    }
 }
 </script>
