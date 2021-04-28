@@ -225,7 +225,7 @@ export default new Vuex.Store({
             return await AccountApi.registerUser(registerDTO);
         },
         async changePassword(context, passwordDTO: IPasswordDTO): Promise<boolean> {
-            return await AccountApi.changePassword(passwordDTO);
+            return await AccountApi.changePassword(context.getters.jwt, passwordDTO);
         },
         async resetPassword(context, resetPasswordDTO: IResetPasswordDTO): Promise<boolean> {
             return await AccountApi.resetPassword(context.getters.jwt, resetPasswordDTO);

@@ -15,7 +15,7 @@ interface ILoginResponse {
     requirePasswordChange: boolean;
 }
 
-interface IRegisterResponse {
+interface IResponse {
     status: string;
 }
 
@@ -49,7 +49,7 @@ export abstract class AccountApi {
     static async registerUser(registerDTO: IRegisterDTO): Promise<boolean> {
         const url = "account/register";
         try {
-            const response = await this.axios.post<IRegisterResponse>(url, registerDTO);
+            const response = await this.axios.post<IResponse>(url, registerDTO);
             console.log('register response', response);
             if (response.status === 200) {
                 return true;
@@ -61,10 +61,13 @@ export abstract class AccountApi {
         }
     }
 
-    static async changePassword(passwordDTO: IPasswordDTO): Promise<boolean> {
+    static async changePassword(jwt: string, passwordDTO: IPasswordDTO): Promise<boolean> {
         const url = "account/changePassword";
+        const auth = {
+            headers: { Authorization: 'Bearer ' + jwt }
+        }
         try {
-            const response = await this.axios.post<IRegisterResponse>(url, passwordDTO);
+            const response = await this.axios.post<IResponse>(url, passwordDTO, auth);
             console.log('change password response', response);
             if (response.status === 200) {
                 return true;
@@ -82,7 +85,7 @@ export abstract class AccountApi {
             headers: { Authorization: 'Bearer ' + jwt }
         }
         try {
-            const response = await this.axios.post<IRegisterResponse>(url, passwordDTO, auth);
+            const response = await this.axios.post<IResponse>(url, passwordDTO, auth);
             console.log('Reset password response', response);
             if (response.status === 200) {
                 return true;
